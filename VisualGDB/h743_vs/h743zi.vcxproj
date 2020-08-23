@@ -13,8 +13,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{C0E0626D-0B33-4BCC-AB25-1923600B4ECC}</ProjectGuid>
-    <BSP_ID>com.sysprogs.arm.stm32</BSP_ID>
+    <BSP_ID>com.visualgdb.bsp.in-place</BSP_ID>
     <BSP_VERSION>2020.06</BSP_VERSION>
+    <InPlaceBSPSubdir>BSP</InPlaceBSPSubdir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
@@ -268,11 +269,11 @@
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_process.h" />
     <ClInclude Include="..\..\Utilities\uart_dbg\printf_dbg.h" />
     <ClInclude Include="..\..\Utilities\uart_dbg\uart_dbg.h" />
-    <None Include="stm32.props" />
-    <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h743xx.c" />
     <None Include="h743zi-Debug.vgdbsettings" />
     <None Include="h743zi-Release.vgdbsettings" />
     <None Include="stm32.xml" />
+    <None Include="stm32.props" />
+    <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h743xx.c" />
   </ItemGroup>
   <ItemGroup>
     <LinkerScript Include="..\..\Config\STM32H743ZI_flash.lds" />
