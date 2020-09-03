@@ -44,12 +44,13 @@ _Min_Stack_Size = 0x800; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-DTCMRAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
-RAM_D1 (xrw)      : ORIGIN = 0x24000000, LENGTH = 512K
-RAM_D2 (xrw)      : ORIGIN = 0x30000000, LENGTH = 288K
-RAM_D3 (xrw)      : ORIGIN = 0x38000000, LENGTH = 64K
-ITCMRAM (xrw)      : ORIGIN = 0x00000000, LENGTH = 64K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 2048K
+DTCMRAM (xrw)     : ORIGIN = 0x20000000, LENGTH = 128K
+RAM_D1  (xrw)     : ORIGIN = 0x24000000, LENGTH = 512K
+RAM_D2A (xrw)     : ORIGIN = 0x30000000, LENGTH = 256K
+RAM_D2B (xrw)     : ORIGIN = 0x30040000, LENGTH = 32K
+RAM_D3  (xrw)     : ORIGIN = 0x38000000, LENGTH = 64K
+ITCMRAM (xrw)     : ORIGIN = 0x00000000, LENGTH = 64K
+FLASH   (rx)      : ORIGIN = 0x8000000, LENGTH = 2048K
 
 
 }
@@ -134,7 +135,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM_D1 AT> FLASH
+  } >RAM_D2A AT> FLASH
 
   
   /* Uninitialized data section */
@@ -151,7 +152,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM_D1
+  } >RAM_D2A
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -162,7 +163,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM_D1 
+  } >RAM_D2A 
   
 
   
@@ -175,7 +176,7 @@ SECTIONS
     
     . = ABSOLUTE(0x30040200);
     *(.RxArraySection) 
-  } >RAM_D2 AT> FLASH
+  } >RAM_D2B AT> FLASH
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
