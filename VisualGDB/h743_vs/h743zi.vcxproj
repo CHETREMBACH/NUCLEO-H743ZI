@@ -14,7 +14,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{C0E0626D-0B33-4BCC-AB25-1923600B4ECC}</ProjectGuid>
     <BSP_ID>com.visualgdb.bsp.in-place</BSP_ID>
-    <BSP_VERSION>2020.06</BSP_VERSION>
+    <BSP_VERSION>1.0</BSP_VERSION>
     <InPlaceBSPSubdir>BSP</InPlaceBSPSubdir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -41,20 +41,22 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../Config;../../Core;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM4F;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FREERTOS;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard />
       <CPPLanguageStandard />
     </ClCompile>
     <Link>
-      <LibrarySearchDirectories>%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <AdditionalOptions />
-      <LinkerScript>../../Config\STM32H743ZI_flash.lds</LinkerScript>
+      <LinkerScript>../../Config/STM32H743ZI_flash_dram.lds</LinkerScript>
       <GenerateMapFile>false</GenerateMapFile>
       <PreprocessLinkerScript>false</PreprocessLinkerScript>
+      <PrintMemoryUsage>true</PrintMemoryUsage>
+      <InheritPreprocessorParametersForLinkerScript>false</InheritPreprocessorParametersForLinkerScript>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
@@ -76,15 +78,16 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Core\hooks.c" />
-    <ClCompile Include="..\..\Core\main.c" />
-    <ClCompile Include="..\..\Core\stm32h7xx_hal_msp.c" />
-    <ClCompile Include="..\..\Core\stm32h7xx_it.c" />
-    <ClCompile Include="..\..\Core\system_stm32h7xx.c" />
+    <ClCompile Include="..\..\Config\startup_stm32h743xx.c" />
+    <ClCompile Include="..\..\Core\Scr\hooks.c" />
+    <ClCompile Include="..\..\Core\Scr\main.c" />
+    <ClCompile Include="..\..\Core\Scr\stm32h7xx_hal_msp.c" />
+    <ClCompile Include="..\..\Core\Scr\stm32h7xx_it.c" />
+    <ClCompile Include="..\..\Core\Scr\system_stm32h7xx.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\croutine.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\event_groups.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\list.c" />
-    <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c" />
+    <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\port.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\MemMang\heap_2.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\queue.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\stream_buffer.c" />
@@ -212,24 +215,22 @@
     <ClCompile Include="..\..\Utilities\uart_dbg\uart_dbg.c" />
     <ClInclude Include="..\..\Config\FreeRTOSConfig.h" />
     <ClInclude Include="..\..\Config\stm32h7xx_hal_conf.h" />
-    <ClInclude Include="..\..\Core\main.h" />
-    <ClInclude Include="..\..\Core\stm32h7xx_it.h" />
+    <ClInclude Include="..\..\Core\Inc\main.h" />
+    <ClInclude Include="..\..\Core\Inc\stm32h7xx_it.h" />
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_armcc.h" />
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_armclang.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_compiler.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_gcc.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_version.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\core_cm7.h" />
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\mpu_armv7.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\stm32h743xx.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h" />
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h" />
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\cmsis_compiler.h" />
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\cmsis_gcc.h" />
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\cmsis_version.h" />
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\core_cm7.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\croutine.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\deprecated_definitions.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\event_groups.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\FreeRTOS.h" />
-    <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\FreeRTOSConfig_template.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\list.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\message_buffer.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\mpu_prototypes.h" />
@@ -243,7 +244,7 @@
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\stream_buffer.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\task.h" />
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\timers.h" />
-    <ClInclude Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h" />
+    <ClInclude Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\portmacro.h" />
     <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h" />
     <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc.h" />
     <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc_ex.h" />
@@ -272,10 +273,8 @@
     <None Include="h743zi-Debug.vgdbsettings" />
     <None Include="h743zi-Release.vgdbsettings" />
     <None Include="stm32.xml" />
-    <None Include="stm32.props" />
-    <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h743xx.c" />
   </ItemGroup>
   <ItemGroup>
-    <LinkerScript Include="..\..\Config\STM32H743ZI_flash.lds" />
+    <LinkerScript Include="..\..\Config\STM32H743ZI_flash_dram.lds" />
   </ItemGroup>
 </Project>

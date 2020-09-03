@@ -1,16 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source files">
-      <UniqueIdentifier>{3da90a38-beb0-433a-992c-c3b1d7e690ae}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Source files\Startup">
-      <UniqueIdentifier>{b9d33e31-bc05-411d-be7b-28f608541dc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source files\Device-specific files">
-      <UniqueIdentifier>{d927cbc0-975a-419f-a935-96b104a5769f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VisualGDB settings">
       <UniqueIdentifier>{924ec7cc-af78-4d69-b03f-2d08a85ba970}</UniqueIdentifier>
     </Filter>
@@ -19,9 +9,6 @@
     </Filter>
     <Filter Include="Utilites\cmd_trmnl">
       <UniqueIdentifier>{c1ebb3e0-1086-420c-906d-24d5d89f5359}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{0f45afb5-7e52-4964-8131-40ecbbb1940f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libraries">
       <UniqueIdentifier>{a20f96a0-dfe3-42dd-ad83-3ca2560f05ef}</UniqueIdentifier>
@@ -35,12 +22,6 @@
     <Filter Include="Libraries\STM32F4xx_HAL_Driver">
       <UniqueIdentifier>{89e8e90c-8318-464f-bdb2-5282e8467a7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\CMSIS\Core">
-      <UniqueIdentifier>{132f3b61-517d-4ed7-994a-102dc9c7bdc0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\CMSIS\Core\Include">
-      <UniqueIdentifier>{1ea51712-c814-4c7f-826a-1818489730ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\CMSIS\Device">
       <UniqueIdentifier>{b1b22800-1d3e-4ab3-b4c9-c1c4bfc2f80f}</UniqueIdentifier>
     </Filter>
@@ -53,18 +34,6 @@
     <Filter Include="Libraries\CMSIS\Device\ST\STM32H7xx\Include">
       <UniqueIdentifier>{95f07051-75bb-45f7-be33-c944155a92f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\CMSIS\Device\ST\STM32H7xx\Source">
-      <UniqueIdentifier>{575104c9-5873-40d6-8f1c-aabdf99f2edf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\CMSIS\Device\ST\STM32H7xx\Source\Templates">
-      <UniqueIdentifier>{e4743cb8-55de-4f6d-8e21-8cc32e88a7af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\CMSIS\Device\ST\STM32H7xx\Source\Templates\gcc">
-      <UniqueIdentifier>{d9740acc-45c6-468f-b6c0-aa22bcb01113}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\CMSIS\Include">
-      <UniqueIdentifier>{096aa1d7-91fa-4cd6-aba8-70641060ce17}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\FreeRTOS\Source">
       <UniqueIdentifier>{6a394e73-293c-4afa-ab18-18bffdf85613}</UniqueIdentifier>
     </Filter>
@@ -76,9 +45,6 @@
     </Filter>
     <Filter Include="Libraries\FreeRTOS\Source\portable\GCC">
       <UniqueIdentifier>{c64eb43e-06ec-4db9-a235-7ee27b9ff14a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F">
-      <UniqueIdentifier>{301784cf-0456-4e63-90d5-b2dd8792e253}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libraries\FreeRTOS\Source\portable\MemMang">
       <UniqueIdentifier>{195f771b-9ad1-48c9-ba37-89849f2675c5}</UniqueIdentifier>
@@ -95,8 +61,26 @@
     <Filter Include="Utilites\uart_dbg">
       <UniqueIdentifier>{8e466718-7baf-43b6-ba14-9edaca6b162e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Device-specific files">
-      <UniqueIdentifier>{57c61e6c-6ccb-4c18-82b3-68c89592fe88}</UniqueIdentifier>
+    <Filter Include="Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7">
+      <UniqueIdentifier>{5ffb459f-893b-4f17-a463-e4eea2573453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1">
+      <UniqueIdentifier>{cacf4dde-a9ba-4fee-b70c-776e78927245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\CMSIS\Core">
+      <UniqueIdentifier>{a6778359-3fdc-423f-90f3-91d7f50c0108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\CMSIS\Core\Include">
+      <UniqueIdentifier>{7972a46c-4db7-4d72-a5c7-2404027d6012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0f45afb5-7e52-4964-8131-40ecbbb1940f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Inc">
+      <UniqueIdentifier>{02d77944-7675-489c-9e8c-9acbe34d2704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scr">
+      <UniqueIdentifier>{6af07c39-b6ed-4c44-a0df-71caa1f2fe3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -121,21 +105,6 @@
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_process.c">
       <Filter>Utilites\cmd_trmnl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Core\main.c">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Core\stm32h7xx_it.c">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Core\system_stm32h7xx.c">
-      <Filter>System</Filter>
-    </ClCompile>
-    <None Include="stm32.props">
-      <Filter>Source files\Device-specific files</Filter>
-    </None>
-    <ClCompile Include="$(BSP_ROOT)\STM32H7xxxx\StartupFiles\startup_stm32h743xx.c">
-      <Filter>Source files\Device-specific files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_freertos_cntrl.h">
@@ -150,24 +119,6 @@
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_process.h">
       <Filter>Utilites\cmd_trmnl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Core\main.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Core\stm32h7xx_it.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_compiler.h">
-      <Filter>Libraries\CMSIS\Core\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_gcc.h">
-      <Filter>Libraries\CMSIS\Core\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_version.h">
-      <Filter>Libraries\CMSIS\Core\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\core_cm7.h">
-      <Filter>Libraries\CMSIS\Core\Include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h">
       <Filter>Libraries\CMSIS\Device\ST\STM32H7xx\Include</Filter>
     </ClInclude>
@@ -176,18 +127,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h">
       <Filter>Libraries\CMSIS\Device\ST\STM32H7xx\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\cmsis_compiler.h">
-      <Filter>Libraries\CMSIS\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\cmsis_gcc.h">
-      <Filter>Libraries\CMSIS\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\cmsis_version.h">
-      <Filter>Libraries\CMSIS\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Include\core_cm7.h">
-      <Filter>Libraries\CMSIS\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\croutine.h">
       <Filter>Libraries\FreeRTOS\Source\include</Filter>
@@ -199,9 +138,6 @@
       <Filter>Libraries\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\FreeRTOS.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\FreeRTOSConfig_template.h">
       <Filter>Libraries\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\list.h">
@@ -306,14 +242,41 @@
     <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_dma.h">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h">
-      <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Utilities\uart_dbg\printf_dbg.h">
       <Filter>Utilites\uart_dbg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Utilities\uart_dbg\uart_dbg.h">
       <Filter>Utilites\uart_dbg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\portmacro.h">
+      <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_armcc.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_armclang.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_compiler.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_gcc.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_version.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\core_cm7.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\mpu_armv7.h">
+      <Filter>Libraries\CMSIS\Core\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Core\Inc\main.h">
+      <Filter>Core\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Core\Inc\stm32h7xx_it.h">
+      <Filter>Core\Inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -683,24 +646,36 @@
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_usb.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c">
-      <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM4F</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Core\hooks.c">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Utilities\uart_dbg\printf_dbg.c">
       <Filter>Utilites\uart_dbg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Utilities\uart_dbg\uart_dbg.c">
       <Filter>Utilites\uart_dbg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Core\stm32h7xx_hal_msp.c">
-      <Filter>System</Filter>
+    <ClCompile Include="..\..\Config\startup_stm32h743xx.c">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\port.c">
+      <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Core\Scr\hooks.c">
+      <Filter>Core\Scr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Core\Scr\main.c">
+      <Filter>Core\Scr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Core\Scr\stm32h7xx_hal_msp.c">
+      <Filter>Core\Scr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Core\Scr\stm32h7xx_it.c">
+      <Filter>Core\Scr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Core\Scr\system_stm32h7xx.c">
+      <Filter>Core\Scr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <LinkerScript Include="..\..\Config\STM32H743ZI_flash.lds">
+    <LinkerScript Include="..\..\Config\STM32H743ZI_flash_dram.lds">
       <Filter>Config</Filter>
     </LinkerScript>
   </ItemGroup>
