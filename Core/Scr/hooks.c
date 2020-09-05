@@ -27,7 +27,7 @@ static volatile unsigned int mallocFailed;
 /* Указать размешение heap */
 #if ( configAPPLICATION_ALLOCATED_HEAP == 1 )
 /* Allocate the memory for the heap. */
-uint8_t __attribute__((section(".RTOS_HEAP_ITCMRAM"))) ucHeap[configTOTAL_HEAP_SIZE];	
+uint8_t __attribute__((section(".RTOS_HEAP_DTCMRAMA"))) ucHeap[configTOTAL_HEAP_SIZE];	
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
 
  void vApplicationIdleHook(void)
