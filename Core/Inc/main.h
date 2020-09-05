@@ -47,6 +47,26 @@ typedef enum {
 	TreadPrioHigh = configMAX_PRIORITIES - 2,         /*< priority: high               */
 	TreadPrioRealtime = configMAX_PRIORITIES - 1,     /*< priority: realtime (highest) */
 } thread_prio_t; 
+	
+
+	/*Static IP ADDRESS*/
+#define IP_ADDR0   192
+#define IP_ADDR1   168
+#define IP_ADDR2   1
+#define IP_ADDR3   10
+   
+	/*NETMASK*/
+#define NETMASK_ADDR0   255
+#define NETMASK_ADDR1   255
+#define NETMASK_ADDR2   255
+#define NETMASK_ADDR3   0
+
+	/*Gateway Address*/
+#define GW_ADDR0   192
+#define GW_ADDR1   168
+#define GW_ADDR2   1
+#define GW_ADDR3   1	
+	
 /* Exported macro ------------------------------------------------------------*/
 
 /* Exported functions prototypes ---------------------------------------------*/

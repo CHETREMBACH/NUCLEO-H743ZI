@@ -19,6 +19,7 @@
 /* Kernel includes. */
 #include "printf_dbg.h"
 #include "cmd_process.h"
+#include "app_ethernet.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
 volatile const char __date__[] = __DATE__;
@@ -35,7 +36,7 @@ void system_thread(void *arg)
 	DBG_Hardware_Setup();
 
 	/* init code for LWIP */
-	//LWIP_Init();	
+	InitLwIP();
 		
 	//Инициализация задачи диагностического терминала 
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
@@ -56,11 +57,79 @@ void system_thread(void *arg)
 }
 
 /**
+  * @brief  Configure the MPU attributes 
+  * @param  None
+  * @retval None
+  */
+static void MPU_Config(void)
+{
+	MPU_Region_InitTypeDef MPU_InitStruct;
+  
+	/* Disable the MPU */
+	HAL_MPU_Disable();
+
+	/* Configure the MPU attributes as Device not cacheable 
+	   for ETH DMA descriptors */
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = 0x30040000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  
+	/* Configure the MPU attributes as Normal Non Cacheable
+	   for LwIP RAM heap which contains the Tx buffers */
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = 0x30044000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
+	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+	/* Enable the MPU */
+	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+}
+
+/**
+  * @brief  CPU L1-Cache enable.
+  * @param  None
+  * @retval None
+  */
+static void CPU_CACHE_Enable(void)
+{
+	/* Enable I-Cache */
+	SCB_EnableICache();
+
+	/* Enable D-Cache */
+	SCB_EnableDCache();
+}
+
+/**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
 {
+	/* Configure the MPU attributes as Device memory for ETH DMA descriptors */
+	MPU_Config();
+  
+	/* Enable the CPU Cache */
+	CPU_CACHE_Enable();	
+	
 	/* MCU Configuration--------------------------------------------------------*/
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
