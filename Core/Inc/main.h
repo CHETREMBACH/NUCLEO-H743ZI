@@ -70,7 +70,11 @@ typedef enum {
 /* Exported macro ------------------------------------------------------------*/
 
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(const char * const Error_Note);
 
 /* Private defines -----------------------------------------------------------*/
 

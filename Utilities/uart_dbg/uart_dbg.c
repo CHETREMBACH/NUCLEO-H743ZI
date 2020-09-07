@@ -75,7 +75,7 @@ void DBG_UART_Setup(void)
 		
 	/*##-1- Configure the UART peripheral ######################################*/
     /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-    /* UART1 configured as follow:
+    /* UART configured as follow:
     - Word Length = 8 Bits
     - Stop Bit = One Stop bit
     - Parity = None
@@ -93,7 +93,7 @@ void DBG_UART_Setup(void)
     
 	if (HAL_UART_Init(&UartHandle) != HAL_OK)
 	{
-		Error_Handler();
+		Error_Handler((const char*)"Initializes Debug USART");
 	}
 	
 	/* Enable the UART Data Register not empty Interrupt */

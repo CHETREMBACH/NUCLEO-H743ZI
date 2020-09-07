@@ -205,6 +205,9 @@
     <Filter Include="Libraries\LwIP\src\netif\ppp\polarssl">
       <UniqueIdentifier>{8e449390-b765-48f3-9f35-df2e6c55f72f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilites\quadspi">
+      <UniqueIdentifier>{0d5dce1f-635b-4404-bd1d-897b24e97be0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="h743zi-Debug.vgdbsettings">
@@ -1004,6 +1007,15 @@
     <ClInclude Include="..\..\Libraries\BSP\Components\lan8742\lan8742.h">
       <Filter>Libraries\BSP\Components\lan8742</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\quadspi.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\stm32746g_qspi.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\w25q128fv.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\croutine.c">
@@ -1306,9 +1318,6 @@
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_dac.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_delayblock.c">
-      <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_dma.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
     </ClCompile>
@@ -1410,6 +1419,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Libraries\BSP\Components\lan8742\lan8742.c">
       <Filter>Libraries\BSP\Components\lan8742</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\quadspi.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\stm32746g_qspi.c">
+      <Filter>Utilites\quadspi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -20,10 +20,16 @@
 #include "printf_dbg.h"
 #include "cmd_process.h"
 #include "app_ethernet.h"
+#include "quadspi.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
 volatile const char __date__[] = __DATE__;
 volatile const char __time__[] = __TIME__;
+
+/**
+  * Initializes the Global MSP.
+  */
+void InitClock(void);
 
 /**
  * @brief  Start Thread 
@@ -50,6 +56,9 @@ void system_thread(void *arg)
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
   
+	MX_QUADSPI_Init();
+	vTaskDelay(500);	
+	test_flash_mem();
 	
 	for (;;) {
 		vTaskDelay(500);
@@ -134,6 +143,8 @@ int main(void)
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
 	
+	InitClock();
+	
 	/* Init thread */
 	xTaskCreate(system_thread, (const char*)"SysTask", configMINIMAL_STACK_SIZE * 2, NULL, TreadPrioNormal, NULL);
 	
@@ -149,10 +160,11 @@ int main(void)
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
-void Error_Handler(void)
+void Error_Handler(const char * const Error_Note)
 {
 	/* User can add his own implementation to report the HAL error return state */
-	while (1) ;
+	printf("Error_Handler: %s \r\n",Error_Note);
+	while (1) vTaskDelay(1); 	
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -168,7 +180,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 	/* User can add his own implementation to report the file name and line number,
 	   tex:  */
 	printf("Wrong parameters value: file %s on line %lu\r\n", file, line);
-	while (1) ;
+	while (1) vTaskDelay(1); 	
 }
 #endif /* USE_FULL_ASSERT */
 /************************ COPYRIGHT 2020 OneTiOne *****END OF FILE****/

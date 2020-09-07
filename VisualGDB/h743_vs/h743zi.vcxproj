@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries\BSP\Components;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Libraries\LwIP\src\include;../../Libraries\LwIP_Port_Freertos\include;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/LwIP_drv;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries\BSP\Components;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Libraries\LwIP\src\include;../../Libraries\LwIP_Port_Freertos\include;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities\Utilities\quadspi;../../Utilities/LwIP_drv;../../Utilities/quadspi;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard>C17</CLanguageStandard>
@@ -187,7 +187,6 @@
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_crc.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_crs.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_dac.c" />
-    <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_delayblock.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_dma.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_dma2d.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_exti.c" />
@@ -215,6 +214,8 @@
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_process.c" />
     <ClCompile Include="..\..\Utilities\LwIP_drv\app_ethernet.c" />
     <ClCompile Include="..\..\Utilities\LwIP_drv\ethernetif.c" />
+    <ClCompile Include="..\..\Utilities\quadspi\quadspi.c" />
+    <ClCompile Include="..\..\Utilities\quadspi\stm32746g_qspi.c" />
     <ClCompile Include="..\..\Utilities\uart_dbg\printf_dbg.c" />
     <ClCompile Include="..\..\Utilities\uart_dbg\uart_dbg.c" />
     <ClInclude Include="..\..\Config\FreeRTOSConfig.h" />
@@ -277,6 +278,9 @@
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_process.h" />
     <ClInclude Include="..\..\Utilities\LwIP_drv\app_ethernet.h" />
     <ClInclude Include="..\..\Utilities\LwIP_drv\ethernetif.h" />
+    <ClInclude Include="..\..\Utilities\quadspi\quadspi.h" />
+    <ClInclude Include="..\..\Utilities\quadspi\stm32746g_qspi.h" />
+    <ClInclude Include="..\..\Utilities\quadspi\w25q128fv.h" />
     <ClInclude Include="..\..\Utilities\uart_dbg\printf_dbg.h" />
     <ClInclude Include="..\..\Utilities\uart_dbg\uart_dbg.h" />
     <None Include="h743zi-Debug.vgdbsettings" />
