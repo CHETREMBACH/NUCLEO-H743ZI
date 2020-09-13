@@ -226,6 +226,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #if defined(QUADSPI)
 

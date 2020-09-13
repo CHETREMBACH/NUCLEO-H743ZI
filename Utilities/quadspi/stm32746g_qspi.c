@@ -67,6 +67,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32746g_qspi.h"
 #include "quadspi.h"
+#include "qspi_drv.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "pin_dbg.h"
+
 /** @addtogroup BSP
   * @{
   */
@@ -118,48 +123,43 @@ uint8_t BSP_QSPI_Init(void)
 { 
 	QSPI_CommandTypeDef s_command;
 	uint8_t value = W25Q128FV_FSR_QE;
-	
-  /* QSPI memory reset */
-  if (QSPI_ResetMemory() != QSPI_OK)
-  {
-    return QSPI_NOT_SUPPORTED;
-  }
-	
+	/* QSPI memory reset */
+	if (QSPI_ResetMemory() != QSPI_OK)
+	{
+		return QSPI_NOT_SUPPORTED;
+	}
 	/* Enable write operations */
 	if (QSPI_WriteEnable() != QSPI_OK)
 	{
 		return QSPI_ERROR;
 	}
-	
 	/* Set status register for Quad Enable,the Quad IO2 and IO3 pins are enable */
 	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-  s_command.Instruction       = WRITE_STATUS_REG2_CMD;
-  s_command.AddressMode       = QSPI_ADDRESS_NONE;
-  s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-  s_command.DataMode          = QSPI_DATA_1_LINE;
-  s_command.DummyCycles       = 0;
-  s_command.NbData            = 1;
-  s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
-  s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
-  s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+	s_command.Instruction       = WRITE_STATUS_REG2_CMD;
+	s_command.AddressMode       = QSPI_ADDRESS_NONE;
+	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+	s_command.DataMode          = QSPI_DATA_1_LINE;
+	s_command.DummyCycles       = 0;
+	s_command.NbData            = 1;
+	s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
+	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 	/* Configure the command */
-  if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
-  {
-    return QSPI_ERROR;
-  }
+	if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	{
+		return QSPI_ERROR;
+	}
 	/* Transmit the data */
 	if (HAL_QSPI_Transmit(&hqspi, &value, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
-  {
-    return QSPI_ERROR;
-  }
-  
-  /* automatic polling mode to wait for memory ready */  
-  if (QSPI_AutoPollingMemReady(W25Q128FV_SUBSECTOR_ERASE_MAX_TIME) != QSPI_OK)
-  {
-    return QSPI_ERROR;
-  }
-	
-  return QSPI_OK;
+	{
+		return QSPI_ERROR;
+	}
+	/* automatic polling mode to wait for memory ready */  
+	if (QSPI_AutoPollingMemReady(W25Q128FV_SUBSECTOR_ERASE_MAX_TIME) != QSPI_OK)
+	{
+		return QSPI_ERROR;
+	}
+	return QSPI_OK;
 }
 
 /**

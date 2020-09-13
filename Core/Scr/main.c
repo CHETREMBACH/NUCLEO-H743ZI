@@ -18,9 +18,11 @@
 #include "main.h"
 /* Kernel includes. */
 #include "printf_dbg.h"
+#include "pin_dbg.h"
 #include "cmd_process.h"
 #include "app_ethernet.h"
 #include "quadspi.h"
+#include "qspi_flash.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
 volatile const char __date__[] = __DATE__;
@@ -41,11 +43,17 @@ void system_thread(void *arg)
 	//Подключение интерфейса отладки
 	DBG_Hardware_Setup();
 
+	//Подключения для отладки GPIO 
+	DBG_PIN_Setup();
+	
 	/* init code for LWIP */
 	InitLwIP();
 		
 	//Инициализация задачи диагностического терминала 
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
+	
+	/* Инициализация задачи QSPI FLASH */
+	QSPI_FLASH_Init();		
 	
 	// Информационная шапка программы
 	printf("______________________________________________\r\n");
@@ -55,13 +63,9 @@ void system_thread(void *arg)
 	printf("   TIME: %s \r\n", __time__);
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
-  
-	MX_QUADSPI_Init();
-	vTaskDelay(500);	
-	test_flash_mem();
-	
+
 	for (;;) {
-		vTaskDelay(500);
+		vTaskDelay(500);	
 	}
 }
 
