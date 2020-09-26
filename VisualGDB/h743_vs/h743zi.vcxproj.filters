@@ -16,9 +16,6 @@
     <Filter Include="Libraries\CMSIS">
       <UniqueIdentifier>{9fbef0d6-0183-40e1-a835-42ec0bc2ea2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\FreeRTOS">
-      <UniqueIdentifier>{5de26a57-602a-4a32-b76d-74cb9987c77a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\STM32F4xx_HAL_Driver">
       <UniqueIdentifier>{89e8e90c-8318-464f-bdb2-5282e8467a7c}</UniqueIdentifier>
     </Filter>
@@ -34,21 +31,6 @@
     <Filter Include="Libraries\CMSIS\Device\ST\STM32H7xx\Include">
       <UniqueIdentifier>{95f07051-75bb-45f7-be33-c944155a92f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source">
-      <UniqueIdentifier>{6a394e73-293c-4afa-ab18-18bffdf85613}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\include">
-      <UniqueIdentifier>{f3769b51-e137-4149-9237-01003d8a33cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\portable">
-      <UniqueIdentifier>{713e3dc5-bb59-4fc6-809e-b80f797a1155}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\portable\GCC">
-      <UniqueIdentifier>{c64eb43e-06ec-4db9-a235-7ee27b9ff14a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\portable\MemMang">
-      <UniqueIdentifier>{195f771b-9ad1-48c9-ba37-89849f2675c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Config">
       <UniqueIdentifier>{c10cd307-c13c-45d0-ae64-d17265f70a71}</UniqueIdentifier>
     </Filter>
@@ -60,12 +42,6 @@
     </Filter>
     <Filter Include="Utilites\uart_dbg">
       <UniqueIdentifier>{8e466718-7baf-43b6-ba14-9edaca6b162e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7">
-      <UniqueIdentifier>{5ffb459f-893b-4f17-a463-e4eea2573453}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1">
-      <UniqueIdentifier>{cacf4dde-a9ba-4fee-b70c-776e78927245}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libraries\CMSIS\Core">
       <UniqueIdentifier>{a6778359-3fdc-423f-90f3-91d7f50c0108}</UniqueIdentifier>
@@ -207,6 +183,30 @@
     </Filter>
     <Filter Include="Utilites\quadspi">
       <UniqueIdentifier>{0d5dce1f-635b-4404-bd1d-897b24e97be0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS">
+      <UniqueIdentifier>{5de26a57-602a-4a32-b76d-74cb9987c77a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source">
+      <UniqueIdentifier>{6a394e73-293c-4afa-ab18-18bffdf85613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source\include">
+      <UniqueIdentifier>{f3769b51-e137-4149-9237-01003d8a33cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source\portable">
+      <UniqueIdentifier>{713e3dc5-bb59-4fc6-809e-b80f797a1155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source\portable\GCC">
+      <UniqueIdentifier>{c64eb43e-06ec-4db9-a235-7ee27b9ff14a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source\portable\GCC\ARM_CM7">
+      <UniqueIdentifier>{5ffb459f-893b-4f17-a463-e4eea2573453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1">
+      <UniqueIdentifier>{cacf4dde-a9ba-4fee-b70c-776e78927245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\LwIP\FreeRTOS\Source\portable\MemMang">
+      <UniqueIdentifier>{195f771b-9ad1-48c9-ba37-89849f2675c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -843,55 +843,55 @@
       <Filter>Libraries\CMSIS\Device\ST\STM32H7xx\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\croutine.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\deprecated_definitions.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\event_groups.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\FreeRTOS.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\list.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\message_buffer.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\mpu_prototypes.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\mpu_wrappers.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\portable.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\projdefs.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\queue.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\semphr.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\stack_macros.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\StackMacros.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\stream_buffer.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\task.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\include\timers.h">
-      <Filter>Libraries\FreeRTOS\Source\include</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Config\FreeRTOSConfig.h">
       <Filter>Config</Filter>
@@ -963,7 +963,7 @@
       <Filter>Utilites\uart_dbg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\portmacro.h">
-      <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\CMSIS\Core\Include\cmsis_armcc.h">
       <Filter>Libraries\CMSIS\Core\Include</Filter>
@@ -1007,49 +1007,46 @@
     <ClInclude Include="..\..\Libraries\BSP\Components\lan8742\lan8742.h">
       <Filter>Libraries\BSP\Components\lan8742</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Utilities\quadspi\quadspi.h">
-      <Filter>Utilites\quadspi</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Utilities\quadspi\stm32746g_qspi.h">
-      <Filter>Utilites\quadspi</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Utilities\quadspi\w25q128fv.h">
       <Filter>Utilites\quadspi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Utilities\uart_dbg\pin_dbg.h">
       <Filter>Utilites\uart_dbg</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Utilities\quadspi\qspi_flash.h">
+    <ClInclude Include="..\..\Utilities\quadspi\task_qspi_flash.h">
       <Filter>Utilites\quadspi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Utilities\quadspi\qspi_drv.h">
+    <ClInclude Include="..\..\Utilities\quadspi\drv_qspi_w25q128.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\test_qspi_flash.h">
       <Filter>Utilites\quadspi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\croutine.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\event_groups.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\list.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\queue.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\stream_buffer.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\tasks.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\timers.c">
-      <Filter>Libraries\FreeRTOS\Source</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\MemMang\heap_2.c">
-      <Filter>Libraries\FreeRTOS\Source\portable\MemMang</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\portable\MemMang</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
@@ -1400,7 +1397,7 @@
       <Filter>Config</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\port.c">
-      <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
+      <Filter>Libraries\LwIP\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Core\Scr\hooks.c">
       <Filter>Core\Scr</Filter>
@@ -1429,19 +1426,19 @@
     <ClCompile Include="..\..\Libraries\BSP\Components\lan8742\lan8742.c">
       <Filter>Libraries\BSP\Components\lan8742</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Utilities\quadspi\quadspi.c">
-      <Filter>Utilites\quadspi</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Utilities\quadspi\stm32746g_qspi.c">
-      <Filter>Utilites\quadspi</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Utilities\uart_dbg\pin_dbg.c">
       <Filter>Utilites\uart_dbg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Utilities\quadspi\qspi_flash.c">
+    <ClCompile Include="..\..\Utilities\quadspi\task_qspi_flash.c">
       <Filter>Utilites\quadspi</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Utilities\quadspi\qspi_drv.c">
+    <ClCompile Include="..\..\Utilities\quadspi\drv_qspi_w25q128.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\w25q128fv.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\test_qspi_flash.c">
       <Filter>Utilites\quadspi</Filter>
     </ClCompile>
   </ItemGroup>
