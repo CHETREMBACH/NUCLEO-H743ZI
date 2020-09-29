@@ -12,6 +12,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "drv_qspi_w25q128.h"
 #include "task_qspi_flash.h"
+#include "test_fatfs.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -31,8 +32,24 @@ TaskHandle_t       qFlashHandleTask;
 TimerHandle_t      qFlashxSoftTimer;            /*  Програмный таймер периодического контроля     */
 TimerHandle_t      qFlashxUpdateTimer;          /*  Програмный таймер контроля ожидания ресурсов  */
 
+QueueHandle_t      xCmdQueue;
+cmd_box_qflash_t   cmd_box;
 
 uint8_t data_buf[256];
+
+/**
+ * @brief  функция отправки сообщения команды
+ * @param  cmd_box_qflash_t *cmd_box_qflash - указатель на сообщение команды
+ * @retval none
+ */
+void send_cmd_box(cmd_box_qflash_t *cmd_box_qflash)
+{
+	/* Проверка очереди */
+	if (xCmdQueue != NULL)
+	{
+		xQueueSend(xCmdQueue, cmd_box_qflash, (TickType_t) 0);
+	}	
+}
 
 /**
   * @brief  QSPI_FLASH control - вызывается с частотой 10 Гц
@@ -41,10 +58,15 @@ uint8_t data_buf[256];
   */
 void qFlashCntrl(void)
 {
-	uint8_t id_code[5];
-	T2_HI;
-	BSP_QSPI_ReadID(id_code);	
-	T2_LO;
+	/* Проверка очереди */
+	if (xCmdQueue != NULL)
+	{
+		if ( xQueueReceive(xCmdQueue, &cmd_box, (TickType_t) 0) == pdPASS)
+		{
+			/* Получена команда */
+			parsing_cmd_box(&cmd_box);
+		}
+	}
 }
 
 /**
@@ -79,11 +101,15 @@ void qFlashTimCallback(TimerHandle_t pxTimer)
   */
 void qFlash_Task(void * pvParameters)
 {  
-
+	/* Открытие очереди для получения команд */
+	if (xCmdQueue == NULL)
+	{
+		xCmdQueue = xQueueCreate(10, sizeof(cmd_box_qflash_t));
+	}
 	
 	/* Открытие таймера периодического контроля  */
-	qFlashxSoftTimer = xTimerCreate( "QTmPrd",		/* Текстовое имя, не используется в RTOS kernel. */
-                                  1000,		/* Период таймера в тиках. */
+	qFlashxSoftTimer = xTimerCreate( "QTmPrd",	/* Текстовое имя, не используется в RTOS kernel. */
+                                  100,		    /* Период таймера в тиках. */
                                   pdTRUE,		/* Время будет автоматически перезагружать себя, когда оно истечет. */
                                   NULL,		/* В функцию параметры не передаем */
                                   qFlashTimCallback); /* Указатель на функцию , которую вызывает таймер. */  
@@ -122,6 +148,9 @@ void qFlash_Task(void * pvParameters)
 
 
 		}      
+		
+		
+		
 	} 
 }
 
@@ -140,31 +169,35 @@ void qFlashInit(void)
 	BSP_QSPI_ConfigFlash(W25Q128FV_SPI_MODE);
 	BSP_QSPI_ReadID(id_code);	
 	
-	for (uint16_t cntic = 0; cntic < 256; cntic++)
-	{
-		data_buf[cntic] = cntic;
-	}
-	data_buf[255] = 55;
 	
-	BlocDampPrint(data_buf,256);
+	/* Link the disk I/O driver. */
+	CmdLinkDriver();
 	
-	//BSP_QSPI_EraseBlock(4096, W25Q128FV_ERASE_4K);
-		
-	BSP_QSPI_Write(data_buf, 4096, 256);
-	
-	for (uint16_t cntic = 0; cntic < 256; cntic++)
-	{
-		data_buf[cntic] = 0;
-	}
-	
-	T1_LO;
-	
-	BSP_QSPI_Read(data_buf, 4096, 256);
-	BlocDampPrint(data_buf, 256);
+//	for (uint16_t cntic = 0; cntic < 256; cntic++)
+//	{
+//		data_buf[cntic] = cntic;
+//	}
+//	data_buf[255] = 55;
+//	
+//	BlocDampPrint(data_buf,256);
+//	
+//	//BSP_QSPI_EraseBlock(4096, W25Q128FV_ERASE_4K);
+//		
+//	BSP_QSPI_Write(data_buf, 4096, 256);
+//	
+//	for (uint16_t cntic = 0; cntic < 256; cntic++)
+//	{
+//		data_buf[cntic] = 0;
+//	}
+//	
+//	T1_LO;
+//	
+//	BSP_QSPI_Read(data_buf, 4096, 256);
+//	BlocDampPrint(data_buf, 256);
 	
 	
 	/* Инициализация задачи */ 
-	xTaskCreate(qFlash_Task, (const char*)"QS_FLSH_TSK", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioBelowNormal, &qFlashHandleTask);	
+	xTaskCreate(qFlash_Task, (const char*)"QS_FLSH_TSK", configMINIMAL_STACK_SIZE * 10, NULL, TreadPrioBelowNormal, &qFlashHandleTask);	
 }
 
 

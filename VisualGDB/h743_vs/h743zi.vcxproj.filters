@@ -208,6 +208,18 @@
     <Filter Include="Libraries\LwIP\FreeRTOS\Source\portable\MemMang">
       <UniqueIdentifier>{195f771b-9ad1-48c9-ba37-89849f2675c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilites\FatFs">
+      <UniqueIdentifier>{f935213b-9cdd-4153-bb1f-ad89a13a01e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\FatFs">
+      <UniqueIdentifier>{6246e15d-dbe9-4938-b730-5e2ed47ed9e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\FatFs\source">
+      <UniqueIdentifier>{01b6c9c6-cc26-49cf-84f2-a0e7f1ed6fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilites\tftpserver">
+      <UniqueIdentifier>{2d3e5fde-ecf8-4822-ad1b-044038f0cb04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="h743zi-Debug.vgdbsettings">
@@ -1022,6 +1034,27 @@
     <ClInclude Include="..\..\Utilities\quadspi\test_qspi_flash.h">
       <Filter>Utilites\quadspi</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Utilities\FatFs\ffconf.h">
+      <Filter>Utilites\FatFs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\FatFs\w25qxx_diskio.h">
+      <Filter>Utilites\FatFs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\FatFs\ff_gen_drv.h">
+      <Filter>Utilites\FatFs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\tftpserver\tftpserver.h">
+      <Filter>Utilites\tftpserver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\tftpserver\tftputils.h">
+      <Filter>Utilites\tftpserver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\cmd_qspi_flash.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\test_fatfs.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\croutine.c">
@@ -1439,6 +1472,30 @@
       <Filter>Utilites\quadspi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Utilities\quadspi\test_qspi_flash.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\FatFs\w25qxx_diskio.c">
+      <Filter>Utilites\FatFs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\FatFs\ff_gen_drv.c">
+      <Filter>Utilites\FatFs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\FatFs\source\ff.c">
+      <Filter>Libraries\FatFs\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\tftpserver\tftputils.c">
+      <Filter>Utilites\tftpserver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\tftpserver\tftpserver.c">
+      <Filter>Utilites\tftpserver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\FatFs\diskio.c">
+      <Filter>Utilites\FatFs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\cmd_qspi_flash.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\test_fatfs.c">
       <Filter>Utilites\quadspi</Filter>
     </ClCompile>
   </ItemGroup>

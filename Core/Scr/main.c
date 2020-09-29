@@ -22,6 +22,7 @@
 #include "cmd_process.h"
 #include "app_ethernet.h"
 #include "task_qspi_flash.h"
+#include "tftpserver.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
 volatile const char __date__[] = __DATE__;
@@ -53,6 +54,9 @@ void system_thread(void *arg)
 	
 	/* Инициализация задачи QSPI FLASH */
 	qFlashInit();		
+	
+	/* Initialize the TFTP server */
+    //tftpd_init();
 	
 	// Информационная шапка программы
 	printf("______________________________________________\r\n");

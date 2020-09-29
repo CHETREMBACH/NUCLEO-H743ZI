@@ -514,6 +514,7 @@ bool add_terminal_cmd(const cmd_t *p_cmp) {
 }
 
 #include "cmd_freertos_cntrl.h"
+#include "cmd_qspi_flash.h"
 
 /**
  * @brief  terminal task
@@ -529,6 +530,9 @@ void terminal_task(void *pvParameters) {
   led_cmd_init();
   /* Инициализация указателя на команду просмотра параметров Freertos        */
   freertos_cmd_init();
+
+  /* Инициализация указателя на команды управления и тестирования qspi ram  */
+  qspi_flash_cmd_init();	
 
   for (;;) {
     vTaskDelay(100);
