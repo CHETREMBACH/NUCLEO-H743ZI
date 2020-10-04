@@ -2,7 +2,7 @@
 /  FatFs Functional Configurations
 /---------------------------------------------------------------------------*/
 
-#define FFCONF_DEF	86604	/* Revision ID */
+#define FFCONF_DEF	86606	/* Revision ID */
 
 /*---------------------------------------------------------------------------/
 / Function Configurations
@@ -102,7 +102,7 @@
 /* The FF_USE_LFN switches the support for LFN (long file name).
 /
 /   0: Disable LFN. FF_MAX_LFN has no effect.
-/   1: Enable LFN with static working buffer on the BSS. Always NOT thread-safe.
+/   1: Enable LFN with static  working buffer on the BSS. Always NOT thread-safe.
 /   2: Enable LFN with dynamic working buffer on the STACK.
 /   3: Enable LFN with dynamic working buffer on the HEAP.
 /
@@ -190,8 +190,8 @@
 /  funciton will be available. */
 
 
-#define FF_MIN_SS		4096
-#define FF_MAX_SS		4096
+#define FF_MIN_SS		512
+#define FF_MAX_SS		512
 /* This set of options configures the range of sector size to be supported. (512,
 /  1024, 2048 or 4096) Always set both 512 for most systems, generic memory card and
 /  harddisk. But a larger value may be required for on-board flash memory and some
@@ -200,10 +200,21 @@
 /  GET_SECTOR_SIZE command. */
 
 
+#define FF_LBA64		0
+/* This option switches support for 64-bit LBA. (0:Disable or 1:Enable)
+/  To enable the 64-bit LBA, also exFAT needs to be enabled. (FF_FS_EXFAT == 1) */
+
+
+#define FF_MIN_GPT		0x100000000
+/* Minimum number of sectors to switch GPT format to create partition in f_mkfs and
+/  f_fdisk function. 0x100000000 max. This option has no effect when FF_LBA64 == 0. */
+
+
 #define FF_USE_TRIM		0
 /* This option switches support for ATA-TRIM. (0:Disable or 1:Enable)
 /  To enable Trim function, also CTRL_TRIM command should be implemented to the
 /  disk_ioctl() function. */
+
 
 
 /*---------------------------------------------------------------------------/
@@ -226,7 +237,7 @@
 #define FF_FS_NORTC		0
 #define FF_NORTC_MON	1
 #define FF_NORTC_MDAY	1
-#define FF_NORTC_YEAR	2018
+#define FF_NORTC_YEAR	2019
 /* The option FF_FS_NORTC switches timestamp functiton. If the system does not have
 /  any RTC function or valid timestamp is not needed, set FF_FS_NORTC = 1 to disable
 /  the timestamp function. Every object modified by FatFs will have a fixed timestamp
@@ -249,7 +260,7 @@
 */
 
 
-#define FF_FS_LOCK		2
+#define FF_FS_LOCK		0
 /* The option FF_FS_LOCK switches file lock function to control duplicated file open
 /  and illegal operation to open objects. This option must be 0 when FF_FS_READONLY
 /  is 1.

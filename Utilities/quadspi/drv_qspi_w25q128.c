@@ -48,6 +48,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "drv_qspi_w25q128.h"
+#include "pin_dbg.h"
 
 BSP_QSPI_Hndlr_t    pqspi;
 
@@ -68,7 +69,7 @@ int32_t BSP_QSPI_Init(void)
 	int32_t ret = BSP_ERROR_NONE;
 	BSP_QSPI_Info_t pInfo;
 	MX_QSPI_Init_t qspi_init;
-	static const uint32_t Prescaler = 10;
+	static const uint32_t Prescaler = 30;
 	
 	Init.InterfaceMode = W25Q128FV_QPI_MODE;
 	Init.DualFlashMode = W25Q128FV_DUALFLASH_DISABLE;	
@@ -258,11 +259,12 @@ int32_t BSP_QSPI_RegisterMspCallbacks (uint32_t Instance, BSP_QSPI_Cb_t *CallBac
 int32_t BSP_QSPI_Read(uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
 {
   int32_t ret = BSP_ERROR_NONE;
-
+	T1_HI;   
       if(W25Q128FV_Read(&(pqspi.hqspi), pqspi.InterfaceMode, pData, ReadAddr, Size) != W25Q128FV_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
+	T1_LO;
   /* Return BSP status */
   return ret;
 }
@@ -297,6 +299,8 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
     /* Perform the write page by page */
     do
     {
+	    T2_HI; 
+	    
       /* Check if Flash busy ? */
       if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
       {
@@ -321,6 +325,7 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
         write_data += current_size;
         current_size = ((current_addr + W25Q128FV_PAGE_SIZE) > end_addr) ? (end_addr - current_addr) : W25Q128FV_PAGE_SIZE;
       }
+	    T2_LO;
     } while ((current_addr < end_addr) && (ret == BSP_ERROR_NONE));
 
   /* Return BSP status */
@@ -337,7 +342,7 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
 int32_t BSP_QSPI_EraseBlock(uint32_t BlockAddress, BSP_QSPI_Erase_t BlockSize)
 {
   int32_t ret = BSP_ERROR_NONE;
-
+	T1_HI;
     /* Check Flash busy ? */
     if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
     {
@@ -355,7 +360,7 @@ int32_t BSP_QSPI_EraseBlock(uint32_t BlockAddress, BSP_QSPI_Erase_t BlockSize)
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
     }
-
+	T1_LO;
   /* Return BSP status */
   return ret;
 }

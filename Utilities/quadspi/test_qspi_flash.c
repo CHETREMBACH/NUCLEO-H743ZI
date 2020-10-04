@@ -232,7 +232,7 @@ void cmd_write_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start write sector 0x%.8lX ... \n", cmd_param->address & 0xFFFFF000);	
 	BSP_QSPI_Write(dampa, cmd_param->address & 0xFFFFF000, W25Q128FV_SUBSECTOR_SIZE);
-	printf("\n Read write completed.\n");	
+	printf("\n Write sector completed.\n");	
 }
 
 

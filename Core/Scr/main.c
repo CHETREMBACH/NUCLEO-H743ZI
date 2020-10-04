@@ -56,7 +56,7 @@ void system_thread(void *arg)
 	qFlashInit();		
 	
 	/* Initialize the TFTP server */
-    //tftpd_init();
+    tftpd_init();
 	
 	// Информационная шапка программы
 	printf("______________________________________________\r\n");

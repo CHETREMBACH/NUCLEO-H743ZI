@@ -21,6 +21,10 @@
 
 FATFS USERFatFS;
 uint8_t work_buff[FF_MAX_SS];
+
+//#define DATA_SIZE 4096  
+//static uint8_t data_buffer[DATA_SIZE];
+
 char FlashPath[4]; /* flash card logical drive path */
 
 FIL USERFile; /* File object for USER */
@@ -87,7 +91,15 @@ void CmdLinkDriver(void)
 void CmdFmkfs(void)
 {
 	/* Форматирование диска */
-	StatusDiscPrint(f_mkfs("0:", FM_ANY, 0, work_buff, sizeof(work_buff)));
+	//StatusDiscPrint(f_mkfs("0:", FM_ANY, 0, work_buff, sizeof(work_buff)));
+	MKFS_PARM   param;
+	param.align = 0;           //Data area alignment (sector)
+	param.au_size = 4096;      //Cluster size (byte)
+	param.fmt = FM_FAT;        //Format option (FM_FAT, FM_FAT32, FM_EXFAT and FM_SFD)
+	param.n_fat = 1;           //Number of FATs
+	param.n_root = 1;          //Number of root directory entries
+        
+	StatusDiscPrint(f_mkfs( "0:", &param,work_buff,sizeof(work_buff)));       
 }
 
 /**
@@ -142,7 +154,7 @@ void CmdFmount(void)
 			totalDirs++;
 		}
 		else {
-			printf("  FILE %s\r\n", fileInfo.fname);
+			printf("  FILE %s  %lu \r\n", fileInfo.fname, fileInfo.fsize);
 			totalFiles++;
 		}
 	}
@@ -230,15 +242,22 @@ void CmdFwrite(void)
 {
     /* Записать Файл */
     /* Открыть файл */
-	StatRESULT = f_open(&USERFile, "start.txt", FA_CREATE_ALWAYS | FA_WRITE);
+	StatRESULT = f_open(&USERFile, "biga.txt", FA_CREATE_ALWAYS | FA_WRITE);
  
 	printf("Open file ...");      
       
 	/* Если файл открыт успешно */
 	if (StatRESULT == FR_OK)
 	{
+		uint8_t pol_fill = 0;
+		
+		for (uint16_t ctic = 0; ctic < (sizeof(TestBuffer)); ctic++)
+		{
+			TestBuffer[ctic] = pol_fill++;
+		}
+		
 		/* Записать данные */
-		StatRESULT = f_write(&USERFile, TestBuffer, (sizeof(TestBuffer)) / 2, &real_num_byte);
+		StatRESULT = f_write(&USERFile, TestBuffer, sizeof(TestBuffer), &real_num_byte);
 		printf(" write file %lu byte", real_num_byte);
 		/* Закрыть файл */
 		f_close(&USERFile);      
@@ -259,17 +278,22 @@ void CmdFread(void)
 {
 	/* Записать Файл */
 	/* Открыть файл */
-	StatRESULT = f_open(&USERFile, "start.txt", FA_CREATE_ALWAYS | FA_WRITE);
+	StatRESULT = f_open(&USERFile, "biga.txt", FA_READ);
             
 	printf("Open file ...");      
       
 	/* Если файл открыт успешно */
 	if (StatRESULT == FR_OK)
 	{
+		for (uint16_t ctic = 0; ctic < (sizeof(TestBuffer)); ctic++)
+		{
+			TestBuffer[ctic] = 0;
+		}
+		
 		/* Записать данные */
-		StatRESULT = f_write(&USERFile, TestBuffer, (sizeof(TestBuffer)) / 2, &real_num_byte);
-        
-		printf(" write file %lu byte", real_num_byte);
+		//StatRESULT = f_write(&USERFile, TestBuffer, (sizeof(TestBuffer)) / 2, &real_num_byte);
+		StatRESULT = f_read(&USERFile, TestBuffer, sizeof(TestBuffer) ,&real_num_byte);
+		printf(" read file %lu byte", real_num_byte);
         
 		/* Закрыть файл */
 		f_close(&USERFile);      

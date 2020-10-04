@@ -56,10 +56,10 @@ DSTATUS w25qxx_initialize(BYTE lun)
 	printf("\n Start Init Drive... \n\n");	
 	
 	/*Initialize the QSPI in memory mapped mode*/
-	BSP_QSPI_Init();
-	BSP_QSPI_ReadID(id_code);
-	BSP_QSPI_ConfigFlash(W25Q128FV_SPI_MODE);
-	BSP_QSPI_ReadID(id_code);	
+	//BSP_QSPI_Init();
+	//BSP_QSPI_ReadID(id_code);
+	//BSP_QSPI_ConfigFlash(W25Q128FV_SPI_MODE);
+	//BSP_QSPI_ReadID(id_code);	
 	
 	printf(" Init Drive Complite. \n\n");
 		

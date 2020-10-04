@@ -2,43 +2,17 @@
   ******************************************************************************
   * @file    LwIP/LwIP_TFTP_Server/Src/tftpserver.c
   * @author  MCD Application Team
-  * @brief   basic tftp server implementation for IAP (only Write Req supported)
+  * @brief   TFTP Server module
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without 
-  * modification, are permitted, provided that the following conditions are met:
-  *
-  * 1. Redistribution of source code must retain the above copyright notice, 
-  *    this list of conditions and the following disclaimer.
-  * 2. Redistributions in binary form must reproduce the above copyright notice,
-  *    this list of conditions and the following disclaimer in the documentation
-  *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
-  *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
-  *    software, must execute solely and exclusively on microcontroller or
-  *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
-  *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
-  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -46,10 +20,8 @@
 #include "tftpserver.h"
 #include "tftputils.h" 
 #include "ff.h"
-#include <stdlib.h>
 #include <string.h>
-#include "ff_gen_drv.h"
-#include "w25qxx_diskio.h"
+
 
 typedef struct
 {
@@ -78,11 +50,7 @@ typedef struct
 FATFS filesystem;
 FIL file_SD, file_CR;
 DIR dir_1, dir_2;
-char SD_Path[4]; /* SD card logical drive path */
-
-
-uint8_t work_buff[FF_MAX_SS];
-
+extern char FlashPath[4];
 
 /* UDPpcb to be binded with port 69  */
 struct udp_pcb *UDPpcb;
@@ -100,6 +68,20 @@ char *tftp_errorcode_string[] = {
                                 };
 
 void recv_callback_tftp(void *arg, struct udp_pcb *upcb, struct pbuf *pkt_buf, const ip_addr_t *addr, u16_t port);
+err_t tftp_send_message(struct udp_pcb *upcb, const ip_addr_t *to_ip, unsigned short to_port, char *buf, unsigned short buflen);
+int tftp_construct_error_message(char *buf, tftp_errorcode err);
+int tftp_send_error_message(struct udp_pcb *upcb, const ip_addr_t *to, int to_port, tftp_errorcode err);
+int tftp_send_data_packet(struct udp_pcb *upcb, const ip_addr_t *to, int to_port, unsigned short block,
+                          char *buf, int buflen);
+int tftp_send_ack_packet(struct udp_pcb *upcb, const ip_addr_t *to, int to_port, unsigned short block);
+void tftp_cleanup_rd(struct udp_pcb *upcb, tftp_connection_args *args);
+void tftp_cleanup_wr(struct udp_pcb *upcb, tftp_connection_args *args);
+void tftp_send_next_block(struct udp_pcb *upcb, tftp_connection_args *args,
+                          const ip_addr_t *to_ip, u16_t to_port);
+void rrq_recv_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p,
+                       const ip_addr_t *addr, u16_t port);
+void wrq_recv_callback(void *arg, struct udp_pcb *upcb, struct pbuf *pkt_buf, const ip_addr_t *addr, u16_t port);
+void process_tftp_request(struct pbuf *pkt_buf, const ip_addr_t *addr, u16_t port);
 
 
 /**
@@ -117,13 +99,13 @@ err_t tftp_send_message(struct udp_pcb *upcb, const ip_addr_t *to_ip, unsigned s
   struct pbuf *pkt_buf; /* Chain of pbuf's to be sent */
 
   /* PBUF_TRANSPORT - specifies the transport layer */
-  pkt_buf = pbuf_alloc(PBUF_TRANSPORT, buflen, PBUF_POOL);
+  pkt_buf = pbuf_alloc(PBUF_TRANSPORT, buflen, PBUF_RAM);
 
   if (!pkt_buf)      /*if the packet pbuf == NULL exit and end transmission */
     return ERR_MEM;
 
   /* Copy the original data buffer over to the packet buffer's payload */
-  memcpy(pkt_buf->payload, buf, buflen);
+  pbuf_take(pkt_buf, buf, buflen);
 
   /* Sending packet by UDP protocol */
   err = udp_sendto(upcb, pkt_buf, to_ip, to_port);
@@ -335,6 +317,7 @@ void rrq_recv_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p,
     tftp_cleanup_rd(upcb, args);
 
     pbuf_free(p);
+    return;
   }
 
   /* if the whole file has not yet been sent then continue  */
@@ -549,12 +532,12 @@ void process_tftp_request(struct pbuf *pkt_buf, const ip_addr_t *addr, u16_t por
   err = udp_bind(upcb, IP_ADDR_ANY, 0);
   if (err != ERR_OK)
   {    
-    /* Unable to bind to port */
+    /* Unable to bind to port   */
     return;
   }
   switch (op)
   {
-    case TFTP_RRQ: /* TFTP RRQ (read request) */
+    case TFTP_RRQ:/* TFTP RRQ (read request) */
     {
       /* Read the name of the file asked by the client to be sent from the SD card */
       tftp_extract_filename(FileName, pkt_buf->payload);
@@ -591,7 +574,7 @@ void process_tftp_request(struct pbuf *pkt_buf, const ip_addr_t *addr, u16_t por
         return;
       }
         
-      /* Start the TFTP write mode */
+      /* Start the TFTP write mode*/
       tftp_process_write(upcb, addr, port, FileName);
       break;
     }
@@ -615,7 +598,7 @@ void process_tftp_request(struct pbuf *pkt_buf, const ip_addr_t *addr, u16_t por
   * @retval None
   */
 void recv_callback_tftp(void *arg, struct udp_pcb *upcb, struct pbuf *pkt_buf,
-                        const ip_addr_t *addr, u16_t port)
+                               const ip_addr_t *addr, u16_t port)
 {
   /* process new connection request */
   process_tftp_request(pkt_buf, addr, port);
@@ -623,6 +606,8 @@ void recv_callback_tftp(void *arg, struct udp_pcb *upcb, struct pbuf *pkt_buf,
   /* free pbuf */
   pbuf_free(pkt_buf);
 }
+
+
 
 /**
   * @brief  Initializes the udp pcb for TFTP 
@@ -634,51 +619,6 @@ void tftpd_init(void)
   err_t err;
   unsigned port = 69;
 
-  FRESULT res;
-
-  
-  /* Link the SD Card disk I/O driver */
-  FATFS_LinkDriver(&Diskio_Driver, SD_Path);  
-  
-  res=f_mount(&filesystem,"0",1); 
-  
-  if(res == FR_OK)
-  {
-//    printf("Result: Success\n");
-  }
-  else if (res == FR_NO_FILESYSTEM)
-  {
-//    printf("Result: Success,But no filesystem.\n");
-    /*                        */	
-//    printf("Creat Filesystem\n");
-    
-
-// const TCHAR* path, /* Logical drive number */
-// BYTE opt,          /* Format option */
-// DWORD au,          /* Size of allocation unit (cluster) [byte] */
-// UINT len           /* Size of working buffer [byte] */
-
-    //W25qxx_EraseChip();
-    
-    res = f_mkfs("0:", FM_ANY, 0, work_buff, sizeof(work_buff));
-    if(res == FR_OK)
-    {
-//      printf("Result: Success\n");
-      res=f_mount(&filesystem,"0",1); 	
-    }
-    else
-    {
-//      printf("Result: Fault. FRESULT = %s\n",fresult[res]);
-//      printf("while(1);\n");
-      while(1);
-    }		
-  }	
-  else
-  {
-//    printf("Result: Fault. FRESULT = %s\n",fresult[res]);
-    while(1);		
-  }
-  
   /* create a new UDP PCB structure  */
   UDPpcb = udp_new();
   if (UDPpcb)
