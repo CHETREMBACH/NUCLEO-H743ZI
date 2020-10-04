@@ -20,6 +20,7 @@
 #include "main.h"
 #include "pin_dbg.h"
 #include "test_qspi_flash.h"
+#include "tftpserver.h"
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -173,6 +174,9 @@ void qFlashInit(void)
 	/* Link the disk I/O driver. */
 	CmdLinkDriver();
 	
+	/* Initialize the TFTP server */
+	tftpd_init();
+	
 //	for (uint16_t cntic = 0; cntic < 256; cntic++)
 //	{
 //		data_buf[cntic] = cntic;
@@ -197,7 +201,7 @@ void qFlashInit(void)
 	
 	
 	/* Инициализация задачи */ 
-	xTaskCreate(qFlash_Task, (const char*)"QS_FLSH_TSK", configMINIMAL_STACK_SIZE * 10, NULL, TreadPrioBelowNormal, &qFlashHandleTask);	
+	xTaskCreate(qFlash_Task, (const char*)"QS_FLSH_TSK", configMINIMAL_STACK_SIZE * 12, NULL, TreadPrioBelowNormal, &qFlashHandleTask);	
 }
 
 

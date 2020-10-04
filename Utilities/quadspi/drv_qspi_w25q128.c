@@ -69,7 +69,7 @@ int32_t BSP_QSPI_Init(void)
 	int32_t ret = BSP_ERROR_NONE;
 	BSP_QSPI_Info_t pInfo;
 	MX_QSPI_Init_t qspi_init;
-	static const uint32_t Prescaler = 30;
+	static const uint32_t Prescaler = 0;
 	
 	Init.InterfaceMode = W25Q128FV_QPI_MODE;
 	Init.DualFlashMode = W25Q128FV_DUALFLASH_DISABLE;	

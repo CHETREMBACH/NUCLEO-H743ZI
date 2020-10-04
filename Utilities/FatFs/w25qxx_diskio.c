@@ -92,7 +92,7 @@ DRESULT w25qxx_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 	while (count--)
 	{
 	
-		printf(" Read sector %.5lu \n", sector); 
+		//printf(" Read sector %.5lu \n", sector); 
 		BSP_QSPI_Read(buff, sector*FLASH_SUBSECTOR_SIZE, FLASH_SUBSECTOR_SIZE);  
 		sector++;
 		buff += FLASH_SUBSECTOR_SIZE;
@@ -174,9 +174,9 @@ DRESULT w25qxx_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
 		//W25X_Write_Sector(sector,(u8*)buff);
 		//W25qxx_WriteSectorData((uint8_t*)buff, sector*((DWORD)(FLASH_SUBSECTOR_SIZE)), (DWORD)(FLASH_SUBSECTOR_SIZE));
 		//W25qxx_EraseSector(Data_Address);
-		printf(" Erase sector %.5lu \n", sector); 
+		//printf(" Erase sector %.5lu \n", sector); 
 		BSP_QSPI_EraseBlock(sector*((DWORD)(FLASH_SUBSECTOR_SIZE)), W25Q128FV_ERASE_4K);  
-		printf(" Write sector %.5lu \n", sector); 
+		//printf(" Write sector %.5lu \n", sector); 
 		BSP_QSPI_Write((uint8_t*)buff, sector*((DWORD)(FLASH_SUBSECTOR_SIZE)), (DWORD)(FLASH_SUBSECTOR_SIZE));
 	  
 		sector++;
