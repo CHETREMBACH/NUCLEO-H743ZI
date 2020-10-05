@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
   * @file    w25q128fv.h
-  * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    29-May-2015
-  * @brief   This file contains all the description of the N25Q128A QSPI memory.
+  * @author  Trembach D.N.
+  * @version V1.5.0
+  * @date    05-10-2020
+  * @brief   This file contains description of the W25Q128FV QSPI memory.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2020 OneTiOne </center></h2>
   *
   ******************************************************************************
   */ 
@@ -54,21 +54,15 @@ typedef struct
 /******************W25Q128FV_Transfer_t**********************/
 typedef enum
 {
-	 W25Q128FV_SPI_MODE = 0,
-	 /*!< 1-1-1 commands, Power on H/W default setting */
-	 W25Q128FV_SPI_2IO_MODE,
-	 /*!< 1-1-2 read commands                   */
-	 W25Q128FV_SPI_4IO_MODE,
-	 /*!< 1-1-4 commands                   */
-	 W25Q128FV_QPI_MODE                      /*!< 4-4-4 commands                               */
+	 W25Q128FV_SPI_MODE = 0, /*!< 1-1-1 commands, Power on H/W default setting */
+	 W25Q128FV_QPI_MODE      /*!< 4-4-4 commands                               */
 } W25Q128FV_Interface_t;
 
 /******************W25Q128FV_DualFlash_t**********************/
 typedef enum
 {
 	 W25Q128FV_DUALFLASH_DISABLE = QSPI_DUALFLASH_DISABLE,
-	 /*!<  Single flash mode              */
-	 W25Q128FV_DUALFLASH_ENABLE = QSPI_DUALFLASH_ENABLE
+ 	 W25Q128FV_DUALFLASH_ENABLE = QSPI_DUALFLASH_ENABLE
 } W25Q128FV_DualFlash_t;
 
 /******************W25Q128FV_Erase_t**********************/
@@ -76,27 +70,32 @@ typedef enum
 typedef enum
 {
 	 W25Q128FV_ERASE_4K = 0, /*!< 4K size Sector erase */
-	 W25Q128FV_ERASE_32K, /*!< 32K size Block erase */
-	 W25Q128FV_ERASE_64K, /*!< 64K size Block erase */
-	 W25Q128FV_ERASE_CHIP  /*!< Whole chip erase     */
+	 W25Q128FV_ERASE_32K,    /*!< 32K size Block erase */
+	 W25Q128FV_ERASE_64K,    /*!< 64K size Block erase */
+	 W25Q128FV_ERASE_CHIP    /*!< Whole chip erase     */
 } W25Q128FV_Erase_t;
 	 
 /** 
   * @brief  W25Q128FV Configuration  
   */  
-#define W25Q128FV_FLASH_SIZE                  0x1000000 /* 128 MBits => 16MBytes */
-#define W25Q128FV_SECTOR_SIZE                 0x10000   /* 256 sectors of 64KBytes */
-#define W25Q128FV_SUBSECTOR_SIZE              0x1000    /* 4096 subsectors of 4kBytes */
-#define W25Q128FV_PAGE_SIZE                   0x100     /* 65536 pages of 256 bytes */
-
-#define W25Q128FV_BULK_ERASE_MAX_TIME         250000
-#define W25Q128FV_SECTOR_ERASE_MAX_TIME       3000
-#define W25Q128FV_SUBSECTOR_ERASE_MAX_TIME    800
-
-/* Flag Status Register */
-#define W25Q128FV_FSR_BUSY                    ((uint8_t)0x01)    /*!< busy */
-#define W25Q128FV_FSR_WREN                    ((uint8_t)0x02)    /*!< write enable */
-#define W25Q128FV_FSR_QE                      ((uint8_t)0x02)    /*!< quad enable */
+#define W25Q128FV_FLASH_SIZE                          0x1000000 /* 128 MBits => 16MBytes */
+#define W25Q128FV_BLOK_SIZE                           0x10000   /* 256 sectors of 64KBytes */
+#define W25Q128FV_SECTOR_SIZE                         0x1000    /* 4096 subsectors of 4kBytes */
+#define W25Q128FV_PAGE_SIZE                           0x100     /* 65536 pages of 256 bytes */
+											          
+	 	 
+#define W25Q128FV_BUSY_CHECK_TIME           1      /* ms */ 	 
+#define W25Q128FV_BUSY_TIMEOUT              5000   /* ms */ 	 
+	 
+#define W25Q128FV_PAGE_PROGRAM_CHECK_TIME   1      /* ms */ 	 
+#define W25Q128FV_PAGE_PROGRAM_TIMEOUT      3      /* ms */ 
+#define W25Q128FV_SECTOR_ERASE_CHECK_TIME   10     /* ms */	 
+#define W25Q128FV_SECTOR_ERASE_TIMEOUT      400    /* ms */
+#define W25Q128FV_BLOCK_ERASE_CHECK_TIME    50     /* ms */ 
+#define W25Q128FV_BLOCK_ERASE_TIMEOUT       2000   /* ms */ 
+#define W25Q128FV_CHIP_ERASE_CHECK_TIME     1000   /* ms */ 	 
+#define W25Q128FV_CHIP_ERASE_TIMEOUT        200000 /* ms */ 	 
+	  
 	 
 /**
   * @brief  W25Q128FV Commands
@@ -113,8 +112,6 @@ typedef enum
 /* Read Operations */
 #define W25Q128FV_READ_CMD                             0x03
 #define W25Q128FV_FAST_READ_CMD                        0x0B
-#define W25Q128FV_DUAL_OUT_FAST_READ_CMD               0x3B	 
-#define W25Q128FV_QUAD_OUT_FAST_READ_CMD               0x6B
 
 /* Write Operations */
 #define W25Q128FV_WRITE_ENABLE_CMD                     0x06
@@ -132,7 +129,6 @@ typedef enum
 
 /* Program Operations */
 #define W25Q128FV_PAGE_PROG_CMD                        0x02
-#define W25Q128FV_QUAD_IN_FAST_PROG_CMD                0x32
 
 /* Erase Operations */
 #define W25Q128FV_SUBSECTOR_ERASE_CMD_4K               0x20
@@ -149,30 +145,29 @@ typedef enum
 	 
 #define W25Q128FV_ENTER_DEEP_POWER_DOWN                0xB9
 #define W25Q128FV_RELEASE_FROM_DEEP_POWER_DOWN         0xAB
- 
 	 
 /**
   * @brief  W25Q128FV Registers
   */
 /* Status Register 1*/
-#define W25Q128FV_SR1_BUSY                     ((uint32_t)0x00000001)    /*!< Erase/Write In Progress */
-#define W25Q128FV_SR1_WEL                      ((uint32_t)0x00000002)    /*!< Write enable latch */
-#define W25Q128FV_SR1_BPB                      ((uint32_t)0x0000005C)    /*!< Block protected against program and erase operations */
-#define W25Q128FV_SR1_TB                       ((uint32_t)0x00000020)    /*!< Top/Bottom Block Protect */
-#define W25Q128FV_SR1_SEC                      ((uint32_t)0x00000040)    /*!< Sector/Block Protect Bit */
-#define W25Q128FV_SR1_SRP0                     ((uint32_t)0x00000080)    /*!< Status Register Protect  */	 
+#define W25Q128FV_SR1_BUSY                     (0x01)    /*!< Erase/Write In Progress */
+#define W25Q128FV_SR1_WEL                      (0x02)    /*!< Write enable latch */
+#define W25Q128FV_SR1_BPB                      (0x5C)    /*!< Block protected against program and erase operations */
+#define W25Q128FV_SR1_TB                       (0x20)    /*!< Top/Bottom Block Protect */
+#define W25Q128FV_SR1_SEC                      (0x40)    /*!< Sector/Block Protect Bit */
+#define W25Q128FV_SR1_SRP0                     (0x80)    /*!< Status Register Protect  */	 
 
 /* Status Register 2*/
-#define W25Q128FV_SR2_SRP1                     ((uint32_t)0x00000001)    /*!< Status Register Protect */
-#define W25Q128FV_SR2_QE                       ((uint32_t)0x00000002)    /*!< Quad Enable */
-#define W25Q128FV_SR2_SRLB                     ((uint32_t)0x00000038)    /*!< Security Register Lock Bits */
-#define W25Q128FV_SR2_CMP                      ((uint32_t)0x00000040)    /*!< Complement Protect */
-#define W25Q128FV_SR2_SUS                      ((uint32_t)0x00000080)    /*!< Erase/Program Suspend Status */	 
+#define W25Q128FV_SR2_SRP1                     (0x01)    /*!< Status Register Protect */
+#define W25Q128FV_SR2_QE                       (0x02)    /*!< Quad Enable */
+#define W25Q128FV_SR2_SRLB                     (0x38)    /*!< Security Register Lock Bits */
+#define W25Q128FV_SR2_CMP                      (0x40)    /*!< Complement Protect */
+#define W25Q128FV_SR2_SUS                      (0x80)    /*!< Erase/Program Suspend Status */	 
 
 /* Status Register 3*/	 
-#define W25Q128FV_SR3_WPS                      ((uint32_t)0x00000004)    /*!< Write Protect Selection */
-#define W25Q128FV_SR3_DRV                      ((uint32_t)0x00000060)    /*!< Output Driver Strength */
-#define W25Q128FV_SR3_HOLD_RST                 ((uint32_t)0x00000080)    /*!< /HOLD or /RESET Pin Function */
+#define W25Q128FV_SR3_WPS                      (0x04)    /*!< Write Protect Selection */
+#define W25Q128FV_SR3_DRV                      (0x60)    /*!< Output Driver Strength */
+#define W25Q128FV_SR3_HOLD_RST                 (0x80)    /*!< /HOLD or /RESET Pin Function */
 	 
 /* Status Register */
 #define W25Q128FV_SR_BUSY                      ((uint32_t)0x00000001)    /*!< Erase/Write In Progress */
@@ -192,14 +187,15 @@ typedef enum
 	 
 	 
  int32_t W25Q128FV_GetFlashInfo(W25Q128FV_Info_t *pInfo);
- int32_t W25Q128FV_AutoPollingMemReady(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode);
- /* Register/Setting Commands *************************************************/
+ int32_t W25Q128FV_SoftPollingCheckLoMask(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint32_t mask_check, uint32_t time_check, uint32_t time_out);	 
+ //int32_t W25Q128FV_AutoPollingMemReady(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode);
  int32_t W25Q128FV_WriteEnable(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode);
  int32_t W25Q128FV_BlockErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint32_t BlockAddress, W25Q128FV_Erase_t BlockSize);
  int32_t W25Q128FV_ChipErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode);
  int32_t W25Q128FV_PageProgram(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *pData, uint32_t WriteAddr, uint32_t Size);
  int32_t W25Q128FV_Read(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
  int32_t W25Q128FV_ReadStatusRegister(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *Value);
+ int32_t W25Q128FV_ReadStatusAllRegister(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *Value);
  int32_t W25Q128FV_EnterQPIMode(QSPI_HandleTypeDef *Ctx);
  int32_t W25Q128FV_ExitQPIMode(QSPI_HandleTypeDef *Ctx);
 
@@ -220,5 +216,5 @@ typedef enum
 #endif
 
 #endif /* __W25Q128FV_H */
+/******************* (C) COPYRIGHT 2020 OneTiOne  *****END OF FILE****/
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

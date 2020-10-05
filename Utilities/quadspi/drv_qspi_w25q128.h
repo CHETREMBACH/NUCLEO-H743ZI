@@ -96,11 +96,6 @@ typedef struct
 
 /* Definition for QSPI modes */
 #define BSP_QSPI_SPI_MODE            (BSP_QSPI_Interface_t)W25Q128FV_SPI_MODE      /* 1 Cmd Line, 1 Address Line and 1 Data Line    */
-#define BSP_QSPI_SPI_1I2O_MODE       (BSP_QSPI_Interface_t)W25Q128FV_SPI_1I2O_MODE /* 1 Cmd Line, 1 Address Line and 2 Data Lines   */
-#define BSP_QSPI_SPI_2IO_MODE        (BSP_QSPI_Interface_t)W25Q128FV_SPI_2IO_MODE  /* 1 Cmd Line, 2 Address Lines and 2 Data Lines  */
-#define BSP_QSPI_SPI_1I4O_MODE       (BSP_QSPI_Interface_t)W25Q128FV_SPI_1I4O_MODE /* 1 Cmd Line, 1 Address Line and 4 Data Lines   */
-#define BSP_QSPI_SPI_4IO_MODE        (BSP_QSPI_Interface_t)W25Q128FV_SPI_4IO_MODE  /* 1 Cmd Line, 4 Address Lines and 4 Data Lines  */
-#define BSP_QSPI_DPI_MODE            (BSP_QSPI_Interface_t)W25Q128FV_DPI_MODE      /* 2 Cmd Lines, 2 Address Lines and 2 Data Lines */
 #define BSP_QSPI_QPI_MODE            (BSP_QSPI_Interface_t)W25Q128FV_QPI_MODE      /* 4 Cmd Lines, 4 Address Lines and 4 Data Lines */
 
 /* Definition for QSPI transfer rates */
@@ -189,6 +184,7 @@ int32_t BSP_QSPI_Write(uint8_t *pData, uint32_t WriteAddr, uint32_t Size);
 int32_t BSP_QSPI_EraseBlock(uint32_t BlockAddress, BSP_QSPI_Erase_t BlockSize);
 int32_t BSP_QSPI_EraseChip(void);
 int32_t BSP_QSPI_GetStatus(void);
+int32_t BSP_QSPI_GetAllStatus(uint8_t *reg_statue);
 int32_t BSP_QSPI_GetInfo(BSP_QSPI_Info_t *pInfo);
 int32_t BSP_QSPI_EnableMemoryMappedMode(void);
 int32_t BSP_QSPI_DisableMemoryMappedMode(void);

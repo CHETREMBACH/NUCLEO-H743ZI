@@ -20,22 +20,8 @@
 #include "stm32h7xx_hal_qspi.h"
 #include "w25q128fv.h"
 #include "main.h"
-/** @addtogroup BSP
-  * @{
-  */
 
-/** @addtogroup Components
-  * @{
-  */
-
-/** @addtogroup W25Q128FV
-  * @brief     This file provides a set of functions needed to drive the
-  *             W25Q128FV QSPI memory.
-  * @{
-  */
-/** @defgroup W25Q128FV_Exported_Functions W25Q128FV Exported Functions
-  * @{
-  */
+#define W25Q128FV_delay_ms(a)  vTaskDelay(a)
 
 /**
   * @brief  Return the configuration of the QSPI memory.
@@ -45,52 +31,120 @@
 int32_t W25Q128FV_GetFlashInfo(W25Q128FV_Info_t *pInfo)
 {
   pInfo->FlashSize          = W25Q128FV_FLASH_SIZE;
-  pInfo->EraseSectorSize    = (2 * W25Q128FV_SUBSECTOR_SIZE);
+  pInfo->EraseSectorSize    = W25Q128FV_SECTOR_SIZE;
   pInfo->ProgPageSize       = W25Q128FV_PAGE_SIZE;
   pInfo->EraseSectorsNumber = (W25Q128FV_FLASH_SIZE/pInfo->EraseSectorSize);
   pInfo->ProgPagesNumber    = (W25Q128FV_FLASH_SIZE/pInfo->ProgPageSize);
   return W25Q128FV_OK;
 }
 
+/* Check if Flash busy ? */
 /**
-  * @brief  Polling WIP(Write In Progress) bit become to 0
+  * @brief  Soft Polling status reg and check masks set low
   *         SPI/QPI;1-0-1/4-0-4
   * @param  Ctx Component object pointer
   * @param  Mode Interface mode
+  * @param  uint32_t mask_check 
+  * @param  uint32_t time_check
+  * @param  uint32_t time_out
+  *
   * @retval QSPI memory status
   */
-int32_t W25Q128FV_AutoPollingMemReady(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode)
+int32_t W25Q128FV_SoftPollingCheckLoMask(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint32_t mask_check, uint32_t time_check, uint32_t time_out)
 {
+	uint8_t  buf_read[3];
+	uint32_t temp_status_reg;
+	uint32_t cnt_time;	
+	QSPI_CommandTypeDef s_command;
+	
+	//printf("mask= %lu t_chk= %lu time_out= %lu\n", mask_check, time_check, time_out);
+	
+	cnt_time = 0;
+	while (cnt_time < time_out)
+	{
+		/* Initialize the read flag status register command */
+		s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
+		s_command.Instruction       = W25Q128FV_READ_STATUS_REG_1_CMD;
+		s_command.AddressMode       = QSPI_ADDRESS_NONE;
+		s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+		s_command.DataMode          = (Mode == W25Q128FV_QPI_MODE) ? QSPI_DATA_4_LINES : QSPI_DATA_1_LINE;
+		s_command.DummyCycles       = 0;
+		s_command.NbData            = 3;
+		s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
+		s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+		s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-  QSPI_CommandTypeDef     s_command;
-  QSPI_AutoPollingTypeDef s_config;
+		/* Configure the command */
+		if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+		{
+			return W25Q128FV_ERROR_COMMAND;
+		}
 
-  /* Configure automatic polling mode to wait for memory ready */
-  s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
-  s_command.Instruction       = W25Q128FV_READ_STATUS_REG_1_CMD;
-  s_command.AddressMode       = QSPI_ADDRESS_NONE;
-  s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-  s_command.DataMode          = (Mode == W25Q128FV_QPI_MODE) ? QSPI_DATA_4_LINES : QSPI_DATA_1_LINE; 
-  s_command.DummyCycles       = 0;
-  s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
-  s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
-  s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+		/* Reception of the data */
+		if (HAL_QSPI_Receive(Ctx, buf_read, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+		{
+			return W25Q128FV_ERROR_RECEIVE;
+		}		
 
-  s_config.Match           = 0;
-  s_config.MatchMode       = QSPI_MATCH_MODE_AND;
-  s_config.Interval        = 0x100;
-  s_config.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
-  s_config.Mask            = W25Q128FV_SR1_BUSY;
-  s_config.StatusBytesSize = 1;
+		temp_status_reg = (uint32_t)buf_read[0] || ((uint32_t)buf_read[1]) << 8 || ((uint32_t)buf_read[1]) << 16;
+		
+		//printf("status %lX %X\n,", temp_status_reg, buf_read[0]);
+				
+		if ((temp_status_reg & mask_check) == 0) 
+		{
+			//printf("Ok\n");
+			return W25Q128FV_OK;
+		}
+			
+		/* Delay */
+		W25Q128FV_delay_ms(time_check);
+		
+		/* Time incremets */
+		cnt_time +=	time_check;
+	}
+	//printf("Err\n");
+	return W25Q128FV_ERROR_COMMAND;
+}	
 
-  if (HAL_QSPI_AutoPolling(Ctx, &s_command, &s_config, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
-  {
-    return W25Q128FV_ERROR_AUTOPOLLING;
-  }
+///**
+//  * @brief  Polling WIP(Write In Progress) bit become to 0
+//  *         SPI/QPI;1-0-1/4-0-4
+//  * @param  Ctx Component object pointer
+//  * @param  Mode Interface mode
+//  * @retval QSPI memory status
+//  */
+//int32_t W25Q128FV_AutoPollingMemReady(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode)
+//{
+//
+//  QSPI_CommandTypeDef     s_command;
+//  QSPI_AutoPollingTypeDef s_config;
+//
+//  /* Configure automatic polling mode to wait for memory ready */
+//  s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
+//  s_command.Instruction       = W25Q128FV_READ_STATUS_REG_1_CMD;
+//  s_command.AddressMode       = QSPI_ADDRESS_NONE;
+//  s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+//  s_command.DataMode          = (Mode == W25Q128FV_QPI_MODE) ? QSPI_DATA_4_LINES : QSPI_DATA_1_LINE;
+//  s_command.DummyCycles       = 0;
+//  s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
+//  s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+//  s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+//
+//  s_config.Match           = 0;
+//  s_config.MatchMode       = QSPI_MATCH_MODE_AND;
+//  s_config.Interval        = 0x20;
+//  s_config.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
+//  s_config.Mask            = W25Q128FV_SR1_BUSY;
+//  s_config.StatusBytesSize = 1;
+//
+//  if (HAL_QSPI_AutoPolling(Ctx, &s_command, &s_config, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+//  {
+//    return W25Q128FV_ERROR_AUTOPOLLING;
+//  }
+//
+//  return W25Q128FV_OK;
+//}
 
-  return W25Q128FV_OK;
-
-}
 /**
   * @brief  This function send a Write Enable and wait it is effective.
   * @param  Ctx Component object pointer
@@ -192,13 +246,6 @@ int32_t W25Q128FV_PageProgram(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mod
     s_command.DataMode        = QSPI_DATA_1_LINE;
     break;
 
-  case W25Q128FV_SPI_4IO_MODE : /* 1-1-4 program commands */
-	s_command.InstructionMode = QSPI_INSTRUCTION_1_LINE;
-	s_command.Instruction     = W25Q128FV_QUAD_IN_FAST_PROG_CMD;
-    s_command.AddressMode     = QSPI_ADDRESS_1_LINE;
-    s_command.DataMode        = QSPI_DATA_4_LINES;
-    break;
-
   case W25Q128FV_QPI_MODE :     /* 4-4-4 commands */
     s_command.InstructionMode = QSPI_INSTRUCTION_4_LINES;
 	s_command.Instruction     = W25Q128FV_PAGE_PROG_CMD;
@@ -251,27 +298,9 @@ int32_t W25Q128FV_Read(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint
     s_command.DataMode          = QSPI_DATA_1_LINE;
 	s_command.DummyCycles       = 8;
 
-
     break;
-  case W25Q128FV_SPI_2IO_MODE:  /* 1-1-2 read commands */
 
-	s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-	s_command.Instruction       = W25Q128FV_DUAL_OUT_FAST_READ_CMD;
-	s_command.AddressMode       = QSPI_INSTRUCTION_1_LINE;
-    s_command.DataMode          = QSPI_DATA_2_LINES;
-	s_command.DummyCycles       = 8;
-
-    break;
-  case W25Q128FV_SPI_4IO_MODE:  /* 1-1-4 read commands */
-
-    s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-	s_command.Instruction       = W25Q128FV_QUAD_OUT_FAST_READ_CMD;
-	s_command.AddressMode       = QSPI_INSTRUCTION_1_LINE;
-    s_command.DataMode          = QSPI_DATA_4_LINES;
-	s_command.DummyCycles       = 8;
-
-    break;
-  case W25Q128FV_QPI_MODE:      /* 4-4-4 commands */
+	  case W25Q128FV_QPI_MODE:      /* 4-4-4 commands */
     s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 	s_command.Instruction       = W25Q128FV_FAST_READ_CMD;
     s_command.AddressMode       = QSPI_ADDRESS_4_LINES;
@@ -339,7 +368,7 @@ int32_t W25Q128FV_BlockErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode
   /* Initialize the erase command */
 
   s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
-	s_command.AddressMode       = (Mode == W25Q128FV_QPI_MODE) ? QSPI_ADDRESS_4_LINES : QSPI_ADDRESS_1_LINE; 
+  s_command.AddressMode       = (Mode == W25Q128FV_QPI_MODE) ? QSPI_ADDRESS_4_LINES : QSPI_ADDRESS_1_LINE; 
   s_command.AddressSize       = QSPI_ADDRESS_24_BITS;
   s_command.Address           = BlockAddress;
   s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
@@ -351,11 +380,25 @@ int32_t W25Q128FV_BlockErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode
 
   /* Send the command */
   W25Q128FV_WriteEnable(Ctx,Mode);
+	
   if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return W25Q128FV_ERROR_COMMAND;
   }
-  W25Q128FV_AutoPollingMemReady(Ctx,Mode);
+	
+  switch(BlockSize)
+  {
+  default :
+  case W25Q128FV_ERASE_4K :
+	  return W25Q128FV_SoftPollingCheckLoMask(Ctx, Mode, W25Q128FV_SR_BUSY, W25Q128FV_SECTOR_ERASE_CHECK_TIME, W25Q128FV_SECTOR_ERASE_TIMEOUT);
+ 
+  case W25Q128FV_ERASE_32K :
+	  return W25Q128FV_SoftPollingCheckLoMask(Ctx, Mode, W25Q128FV_SR_BUSY, W25Q128FV_BLOCK_ERASE_CHECK_TIME, W25Q128FV_BLOCK_ERASE_TIMEOUT);
+
+  case W25Q128FV_ERASE_64K :
+	  return W25Q128FV_SoftPollingCheckLoMask(Ctx, Mode, W25Q128FV_SR_BUSY, W25Q128FV_BLOCK_ERASE_CHECK_TIME, W25Q128FV_BLOCK_ERASE_TIMEOUT);
+  }	
+
   return W25Q128FV_OK;
 }
 
@@ -369,27 +412,26 @@ int32_t W25Q128FV_BlockErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode
 
 int32_t W25Q128FV_ChipErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode)
 {
-  QSPI_CommandTypeDef s_command;
+	QSPI_CommandTypeDef s_command;
 
-  /* Initialize the erase command */
-  s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
-  s_command.Instruction       = W25Q128FV_CHIP_ERASE_CMD;
-  s_command.AddressMode       = QSPI_ADDRESS_NONE;
-  s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-  s_command.DataMode          = QSPI_DATA_NONE;
-  s_command.DummyCycles       = 0;
-  s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
-  s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
-  s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+	/* Initialize the erase command */
+	s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
+	s_command.Instruction       = W25Q128FV_CHIP_ERASE_CMD;
+	s_command.AddressMode       = QSPI_ADDRESS_NONE;
+	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+	s_command.DataMode          = QSPI_DATA_NONE;
+	s_command.DummyCycles       = 0;
+	s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
+	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-  if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
-  {
-    return W25Q128FV_ERROR_COMMAND;
-  }
-
-  return W25Q128FV_OK;
-
+	if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	{
+		return W25Q128FV_ERROR_COMMAND;
+	}
+	return W25Q128FV_SoftPollingCheckLoMask(Ctx, Mode, W25Q128FV_SR_BUSY, W25Q128FV_CHIP_ERASE_CHECK_TIME, W25Q128FV_CHIP_ERASE_TIMEOUT);
 }
+
 /**
   * @brief  Read Flash Status register value
   *         SPI/QPI; 1-0-1/4-0-4
@@ -426,6 +468,44 @@ int32_t W25Q128FV_ReadStatusRegister(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interfac
   }
 
   return W25Q128FV_OK;
+}
+
+/**
+  * @brief  Read Flash Status register value
+  *         SPI/QPI; 1-0-1/4-0-4
+  * @param  Ctx Component object pointer
+  * @param  Mode Interface mode
+  * @param  Value pointer to status register value
+  * @retval QSPI memory status
+  */
+int32_t W25Q128FV_ReadStatusAllRegister(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *Value)
+{
+	QSPI_CommandTypeDef s_command;
+	/* Initialize the read flag status register command */
+	s_command.InstructionMode   = (Mode == W25Q128FV_QPI_MODE) ? QSPI_INSTRUCTION_4_LINES : QSPI_INSTRUCTION_1_LINE;
+	s_command.Instruction       = W25Q128FV_READ_STATUS_REG_1_CMD;
+	s_command.AddressMode       = QSPI_ADDRESS_NONE;
+	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+	s_command.DataMode          = (Mode == W25Q128FV_QPI_MODE) ? QSPI_DATA_4_LINES : QSPI_DATA_1_LINE;
+	s_command.DummyCycles       = 0;
+	s_command.NbData            = 3;
+	s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
+	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+
+	/* Configure the command */
+	if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	{
+		return W25Q128FV_ERROR_COMMAND;
+	}
+
+	/* Reception of the data */
+	if (HAL_QSPI_Receive(Ctx, Value, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	{
+		return W25Q128FV_ERROR_RECEIVE;
+	}
+
+	return W25Q128FV_OK;
 }
 
 /**
@@ -511,24 +591,7 @@ int32_t W25Q128FV_EnableMemoryMappedMode(QSPI_HandleTypeDef *Ctx, W25Q128FV_Inte
 
 
 		break;
-	case W25Q128FV_SPI_2IO_MODE:  /* 1-1-2 read commands */
 
-		s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-		s_command.Instruction       = W25Q128FV_DUAL_OUT_FAST_READ_CMD;
-		s_command.AddressMode       = QSPI_INSTRUCTION_1_LINE;
-		s_command.DataMode          = QSPI_DATA_2_LINES;
-		s_command.DummyCycles       = 8;
-
-		break;
-	case W25Q128FV_SPI_4IO_MODE:  /* 1-1-4 read commands */
-
-		s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-		s_command.Instruction       = W25Q128FV_QUAD_OUT_FAST_READ_CMD;
-		s_command.AddressMode       = QSPI_INSTRUCTION_1_LINE;
-		s_command.DataMode          = QSPI_DATA_4_LINES;
-		s_command.DummyCycles       = 8;
-
-		break;
 	case W25Q128FV_QPI_MODE:      /* 4-4-4 commands */
 		s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
 		s_command.Instruction       = W25Q128FV_FAST_READ_CMD;

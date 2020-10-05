@@ -18,8 +18,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 /* Буфер рпазмером 1 сектор для тестирования памяти  */
-uint8_t dampb[W25Q128FV_SUBSECTOR_SIZE];
-uint8_t dampa[W25Q128FV_SUBSECTOR_SIZE];
+uint8_t dampb[W25Q128FV_SECTOR_SIZE];
+uint8_t dampa[W25Q128FV_SECTOR_SIZE];
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -148,7 +148,7 @@ void fill_damp(uint8_t* pdamp, id_mode_qflash_e mode_fill, uint16_t offset_damp,
   */
 void cmd_chip_erase(void)
 {
-	printf("/n Start erases memory... \n");	
+	printf("\n Start erases memory... \n");	
 	/* Erases the entire QSPI memory.*/
 	if (BSP_QSPI_EraseChip() == BSP_ERROR_NONE)
 	{
@@ -171,16 +171,16 @@ void cmd_chip_status(void)
 	
 	printf("\n Start check memory... \n");	
 	/* Подготовка буфера для сравнения */
-	fill_damp(dampa, MODE_FILL, 0, W25Q128FV_SUBSECTOR_SIZE, 0xFF);
+	fill_damp(dampa, MODE_FILL, 0, W25Q128FV_SECTOR_SIZE, 0xFF);
 	/* Цикл по всем секторам */
-	for (uint32_t cntic = 0; cntic < W25Q128FV_FLASH_SIZE; cntic = cntic + W25Q128FV_SUBSECTOR_SIZE)
+	for (uint32_t cntic = 0; cntic < W25Q128FV_FLASH_SIZE; cntic = cntic + W25Q128FV_SECTOR_SIZE)
 	{   
 		/*  */
 		if ((cntic & 0x0003FFFF) == 0) 	printf("\n");	
 		/* Чтение сегмента */	
-		BSP_QSPI_Read(dampb, cntic, W25Q128FV_SUBSECTOR_SIZE);
+		BSP_QSPI_Read(dampb, cntic, W25Q128FV_SECTOR_SIZE);
 		/* Анализ сегмента */		
-		if (compare_mem_damp(dampa, dampb, W25Q128FV_SUBSECTOR_SIZE))
+		if (compare_mem_damp(dampa, dampb, W25Q128FV_SECTOR_SIZE))
 		{
 			cnt_empty_sector++;			
 			printf("*");
@@ -191,9 +191,9 @@ void cmd_chip_status(void)
 		}
 	}
 	/* вывод статуса */
-	printf("\nFill sector %.4d  ", (W25Q128FV_FLASH_SIZE / W25Q128FV_SUBSECTOR_SIZE) - cnt_empty_sector);
+	printf("\nFill sector %.4d  ", (W25Q128FV_FLASH_SIZE / W25Q128FV_SECTOR_SIZE) - cnt_empty_sector);
 	printf("Empty sector %.4d  ", cnt_empty_sector);	
-	printf("Empty memory %2.2f %%\n", ( ((double)cnt_empty_sector) * 100 )/ (double)(W25Q128FV_FLASH_SIZE / W25Q128FV_SUBSECTOR_SIZE));	
+	printf("Empty memory %2.2f %%\n", (((double)cnt_empty_sector) * 100) / (double)(W25Q128FV_FLASH_SIZE / W25Q128FV_SECTOR_SIZE));	
 }
 
 /**
@@ -231,7 +231,7 @@ void cmd_erase_sector(cmd_sector_qflash_t* cmd_param)
 void cmd_write_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start write sector 0x%.8lX ... \n", cmd_param->address & 0xFFFFF000);	
-	BSP_QSPI_Write(dampa, cmd_param->address & 0xFFFFF000, W25Q128FV_SUBSECTOR_SIZE);
+	BSP_QSPI_Write(dampa, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
 	printf("\n Write sector completed.\n");	
 }
 
@@ -244,7 +244,7 @@ void cmd_write_sector(cmd_sector_qflash_t* cmd_param)
 void cmd_read_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start read sector 0x%.8lX ... \n", cmd_param->address & 0xFFFFF000);	
-	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SUBSECTOR_SIZE);
+	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
 	printf("\n Read sector completed.\n");	
 }
 
@@ -257,8 +257,8 @@ void cmd_read_sector(cmd_sector_qflash_t* cmd_param)
 void cmd_compare_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start compare sector 0x%.8lX ... \n", cmd_param->address & 0xFFFFF000);	
-	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SUBSECTOR_SIZE);
-	if (compare_mem_damp(dampa, dampb, W25Q128FV_SUBSECTOR_SIZE))
+	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
+	if (compare_mem_damp(dampa, dampb, W25Q128FV_SECTOR_SIZE))
 	{
 		printf("\n Compare sector completed - sector matches the dump.\n");				
 	}
@@ -276,8 +276,8 @@ void cmd_compare_sector(cmd_sector_qflash_t* cmd_param)
 void cmd_view_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n View sector 0x%.8lX ... \n", cmd_param->address & 0xFFFFF000);	
-	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SUBSECTOR_SIZE);
-	BlocDampPrint(dampb, W25Q128FV_SUBSECTOR_SIZE);	
+	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
+	BlocDampPrint(dampb, W25Q128FV_SECTOR_SIZE);	
 }
 
 /**
@@ -313,11 +313,11 @@ void cmd_damp_hndlr(cmd_damp_qflash_t* cmd_param)
 	case  MODE_INC:	
 	case  MODE_DEC:		
 	case MODE_FILL:	
-		fill_damp(dampa, cmd_param->id_mode, 0, W25Q128FV_SUBSECTOR_SIZE, 0xFF);
+		fill_damp(dampa, cmd_param->id_mode, 0, W25Q128FV_SECTOR_SIZE, 0xFF);
 		break;		
 	case MODE_VIEW: 
 		printf("\n View damp  \n");	
-		BlocDampPrint(dampa, W25Q128FV_SUBSECTOR_SIZE);			
+		BlocDampPrint(dampa, W25Q128FV_SECTOR_SIZE);			
 		break;		
 		
 	default:

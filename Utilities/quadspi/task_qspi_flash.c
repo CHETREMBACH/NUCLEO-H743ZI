@@ -102,6 +102,8 @@ void qFlashTimCallback(TimerHandle_t pxTimer)
   */
 void qFlash_Task(void * pvParameters)
 {  
+	uint8_t id_code[5];
+	
 	/* Открытие очереди для получения команд */
 	if (xCmdQueue == NULL)
 	{
@@ -164,12 +166,11 @@ void qFlashInit(void)
 {
 	uint8_t id_code[5];
 	/*Initialize the QSPI in memory mapped mode*/
-	T1_HI;
+
 	BSP_QSPI_Init();
 	BSP_QSPI_ReadID(id_code);
-	BSP_QSPI_ConfigFlash(W25Q128FV_SPI_MODE);
-	BSP_QSPI_ReadID(id_code);	
-	
+	BSP_QSPI_ConfigFlash(W25Q128FV_QPI_MODE);
+	BSP_QSPI_ReadID(id_code);
 	
 	/* Link the disk I/O driver. */
 	CmdLinkDriver();

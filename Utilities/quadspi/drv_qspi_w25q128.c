@@ -4,51 +4,11 @@
   * @author  MCD Application Team
   * @brief   This file includes a standard driver for the QSPI memory .
   ******************************************************************************
-  @verbatim
-  How To use this driver:
-  -----------------------
-   - This driver is used to drive the W25Q128FV QSPI external
-       memory mounted on STM32H743I-EVAL evaluation board.
-
-   - This driver need a specific component driver (W25Q128FV) to be included with.
-
-  Driver description:
-  -------------------
-   - Initialization steps:
-       + Initialize the QPSI external memory using the BSP_QSPI_Init() function. This
-            function includes the MSP layer hardware resources initialization and the
-            QSPI interface with the external memory.
-         STR and DTR transfer rates are supported.
-         SPI, SPI 2-IO, SPI-4IO and QPI modes are supported
-
-   - QSPI memory operations
-       + QSPI memory can be accessed with read/write operations once it is
-            initialized.
-            Read/write operation can be performed with AHB access using the functions
-            BSP_QSPI_Read()/BSP_QSPI_Write().
-       + The function BSP_QSPI_GetInfo() returns the configuration of the QSPI memory.
-            (see the QSPI memory data sheet)
-       + Perform erase block operation using the function BSP_QSPI_EraseBlock() and by
-            specifying the block address. You can perform an erase operation of the whole
-            chip by calling the function BSP_QSPI_EraseChip().
-       + The function BSP_QSPI_GetStatus() returns the current status of the QSPI memory.
-            (see the QSPI memory data sheet)
-       + The function BSP_QSPI_EnableMemoryMappedMode enables the QSPI memory mapped mode
-       + The function BSP_QSPI_DisableMemoryMappedMode disables the QSPI memory mapped mode
-       + The function BSP_QSPI_ConfigFlash() allow to configure the QSPI mode and transfer rate
-
-  Note:
-  --------
-    Regarding the "Instance" parameter, needed for all functions, it is used to select
-    an QSPI instance. On the STM32H743I_EVAL board, there's one instance. Then, this
-    parameter should be 0.
-
   ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
 #include "drv_qspi_w25q128.h"
-#include "pin_dbg.h"
 
 BSP_QSPI_Hndlr_t    pqspi;
 
@@ -71,7 +31,7 @@ int32_t BSP_QSPI_Init(void)
 	MX_QSPI_Init_t qspi_init;
 	static const uint32_t Prescaler = 0;
 	
-	Init.InterfaceMode = W25Q128FV_QPI_MODE;
+	Init.InterfaceMode = W25Q128FV_SPI_MODE;
 	Init.DualFlashMode = W25Q128FV_DUALFLASH_DISABLE;	
 
 	/* Check if instance is already initialized */
@@ -105,8 +65,8 @@ int32_t BSP_QSPI_Init(void)
 		else if(QSPI_ResetMemory() != BSP_ERROR_NONE)
 		{
 			ret = BSP_ERROR_COMPONENT_FAILURE;
-		}/* Force Flash enter 4 Byte address mode */
-		else if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
+		}
+		else if(W25Q128FV_SoftPollingCheckLoMask(&(pqspi.hqspi), pqspi.InterfaceMode, W25Q128FV_SR_BUSY, W25Q128FV_BUSY_CHECK_TIME, W25Q128FV_BUSY_TIMEOUT) != W25Q128FV_OK)
 		{
 			ret = BSP_ERROR_COMPONENT_FAILURE;
 		}
@@ -259,12 +219,10 @@ int32_t BSP_QSPI_RegisterMspCallbacks (uint32_t Instance, BSP_QSPI_Cb_t *CallBac
 int32_t BSP_QSPI_Read(uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
 {
   int32_t ret = BSP_ERROR_NONE;
-	T1_HI;   
       if(W25Q128FV_Read(&(pqspi.hqspi), pqspi.InterfaceMode, pData, ReadAddr, Size) != W25Q128FV_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
-	T1_LO;
   /* Return BSP status */
   return ret;
 }
@@ -299,10 +257,9 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
     /* Perform the write page by page */
     do
     {
-	    T2_HI; 
-	    
+   
       /* Check if Flash busy ? */
-      if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
+	  if(W25Q128FV_SoftPollingCheckLoMask(&(pqspi.hqspi), pqspi.InterfaceMode, W25Q128FV_SR_BUSY, W25Q128FV_BUSY_CHECK_TIME, W25Q128FV_BUSY_TIMEOUT) != W25Q128FV_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }/* Enable write operations */
@@ -314,7 +271,7 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }/* Configure automatic polling mode to wait for end of program */
-      else if (W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
+	    else if(W25Q128FV_SoftPollingCheckLoMask(&(pqspi.hqspi), pqspi.InterfaceMode, W25Q128FV_SR_BUSY, W25Q128FV_PAGE_PROGRAM_CHECK_TIME, W25Q128FV_PAGE_PROGRAM_TIMEOUT) != W25Q128FV_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -325,7 +282,7 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
         write_data += current_size;
         current_size = ((current_addr + W25Q128FV_PAGE_SIZE) > end_addr) ? (end_addr - current_addr) : W25Q128FV_PAGE_SIZE;
       }
-	    T2_LO;
+
     } while ((current_addr < end_addr) && (ret == BSP_ERROR_NONE));
 
   /* Return BSP status */
@@ -342,9 +299,8 @@ int32_t BSP_QSPI_Write( uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
 int32_t BSP_QSPI_EraseBlock(uint32_t BlockAddress, BSP_QSPI_Erase_t BlockSize)
 {
   int32_t ret = BSP_ERROR_NONE;
-	T1_HI;
-    /* Check Flash busy ? */
-    if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
+	/* Check if Flash busy ? */
+	if (W25Q128FV_SoftPollingCheckLoMask(&(pqspi.hqspi), pqspi.InterfaceMode, W25Q128FV_SR_BUSY, W25Q128FV_BUSY_CHECK_TIME, W25Q128FV_BUSY_TIMEOUT) != W25Q128FV_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Enable write operations */
@@ -360,7 +316,6 @@ int32_t BSP_QSPI_EraseBlock(uint32_t BlockAddress, BSP_QSPI_Erase_t BlockSize)
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
     }
-	T1_LO;
   /* Return BSP status */
   return ret;
 }
@@ -373,8 +328,8 @@ int32_t BSP_QSPI_EraseChip(void)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-    /* Check Flash busy ? */
-    if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
+	/* Check if Flash busy ? */
+	if (W25Q128FV_SoftPollingCheckLoMask(&(pqspi.hqspi), pqspi.InterfaceMode, W25Q128FV_SR_BUSY, W25Q128FV_BUSY_CHECK_TIME, W25Q128FV_BUSY_TIMEOUT) != W25Q128FV_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Enable write operations */
@@ -392,6 +347,32 @@ int32_t BSP_QSPI_EraseChip(void)
     }
   /* Return BSP status */
   return ret;
+}
+
+/**
+  * @brief  Reads current status reg1,reg2,reg3 of the QSPI memory.
+  * @param  reg_statue - point to array status reg
+  *         If WIP != 0 then return busy.
+  * @retval QSPI memory status: whether busy or not
+  */
+int32_t BSP_QSPI_GetAllStatus(uint8_t *reg_statue)
+{
+	int32_t ret = BSP_ERROR_NONE;
+
+	if (W25Q128FV_ReadStatusAllRegister(&(pqspi.hqspi), pqspi.InterfaceMode, reg_statue) != W25Q128FV_OK)
+	{
+		ret = BSP_ERROR_COMPONENT_FAILURE;
+	}
+	else
+	{
+		/* Check the value of the register */
+		if ((reg_statue[0] & (uint8_t)W25Q128FV_SR1_BUSY) != 0U)
+		{
+			ret = BSP_ERROR_BUSY;
+		}
+	}
+	/* Return BSP status */
+	return ret;
 }
 
 /**
@@ -557,8 +538,6 @@ int32_t BSP_QSPI_ConfigFlash(BSP_QSPI_Interface_t Mode)
           break;
 
         case BSP_QSPI_SPI_MODE :               /* 1-1-1 commands, Power on H/W default setting */
-        case BSP_QSPI_SPI_2IO_MODE :           /* 1-2-2 read commands */
-        case BSP_QSPI_SPI_4IO_MODE :           /* 1-4-4 read commands */
         default :
           if(Mode == W25Q128FV_QPI_MODE)
           {
@@ -706,7 +685,7 @@ static int32_t QSPI_ResetMemory(void)
 	{
 		ret = BSP_ERROR_COMPONENT_FAILURE;
 	}/* Wait Flash ready */
-	else if(W25Q128FV_AutoPollingMemReady(&(pqspi.hqspi), pqspi.InterfaceMode) != W25Q128FV_OK)
+	else if(W25Q128FV_SoftPollingCheckLoMask(&(pqspi.hqspi), pqspi.InterfaceMode, W25Q128FV_SR_BUSY, W25Q128FV_BUSY_CHECK_TIME, W25Q128FV_BUSY_TIMEOUT) != W25Q128FV_OK)
 	{
 		ret = BSP_ERROR_COMPONENT_FAILURE;
 	}/* Send RESET ENABLE command in SPI mode (1-1-1) */
