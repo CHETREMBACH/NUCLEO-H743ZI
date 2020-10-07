@@ -31,7 +31,7 @@ FIL USERFile; /* File object for USER */
 
 uint32_t NotifyValue;
 FRESULT StatRESULT; 
-uint32_t real_num_byte; 
+UINT real_num_byte; 
 
 uint8_t TestBuffer[4096];
 
@@ -258,7 +258,7 @@ void CmdFwrite(void)
 		
 		/* Записать данные */
 		StatRESULT = f_write(&USERFile, TestBuffer, sizeof(TestBuffer), &real_num_byte);
-		printf(" write file %lu byte", real_num_byte);
+		printf(" write file %u byte", real_num_byte);
 		/* Закрыть файл */
 		f_close(&USERFile);      
 		printf(" close file\n");
@@ -293,7 +293,7 @@ void CmdFread(void)
 		/* Записать данные */
 		//StatRESULT = f_write(&USERFile, TestBuffer, (sizeof(TestBuffer)) / 2, &real_num_byte);
 		StatRESULT = f_read(&USERFile, TestBuffer, sizeof(TestBuffer) ,&real_num_byte);
-		printf(" read file %lu byte", real_num_byte);
+		printf(" read file %u byte", real_num_byte);
         
 		/* Закрыть файл */
 		f_close(&USERFile);      

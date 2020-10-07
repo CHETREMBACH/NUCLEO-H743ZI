@@ -1498,6 +1498,12 @@
     <ClCompile Include="..\..\Utilities\quadspi\test_fatfs.c">
       <Filter>Utilites\quadspi</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Libraries\LwIP\src\apps\http\httpd.c">
+      <Filter>Libraries\LwIP\src\apps\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\LwIP\src\apps\http\fs.c">
+      <Filter>Libraries\LwIP\src\apps\http</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <LinkerScript Include="..\..\Config\STM32H743ZI_flash_dram.lds">

@@ -17,6 +17,8 @@
 #include "printf_dbg.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include "pin_dbg.h"
+
 /* Буфер рпазмером 1 сектор для тестирования памяти  */
 uint8_t dampb[W25Q128FV_SECTOR_SIZE];
 uint8_t dampa[W25Q128FV_SECTOR_SIZE];
@@ -39,34 +41,12 @@ uint16_t DataDampPrint(uint8_t* buff_damp, uint16_t index_damp)
 	{
 		/* отступ между банками */
 		if (contic == 16) printf("   ");
-    
 		/* Формирование строки HEX */
 		printf(" %.2X", buff_damp[index_damp + contic]);
 	}
-//  
-//	printf("   ");
-//  
-//	for (uint8_t contic = 0; contic < 32; contic++)
-//	{
-//    
-//		/* отступ между банками */
-//		if (contic == 16) printf("   ");
-//    
-//		if (buff_damp[index_damp + contic] > 0x1f)
-//		{
-//			/* Формирование строки CHAR */
-//			printf("%c", buff_damp[index_damp + contic]);
-//		}
-//		else
-//		{
-//			/* Формирование строки CHAR */
-//			printf(".");    
-//		}  
-//	}
-  
+ 
 	printf("\n");
-
-	return 32;  
+    return 32;  
 }
 
 
@@ -244,7 +224,10 @@ void cmd_write_sector(cmd_sector_qflash_t* cmd_param)
 void cmd_read_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start read sector 0x%.8lX ... \n", cmd_param->address & 0xFFFFF000);	
-	BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
+	T1_HI;
+    BSP_QSPI_Read(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
+	//BSP_QSPI_DMARead(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
+	T1_LO;	
 	printf("\n Read sector completed.\n");	
 }
 

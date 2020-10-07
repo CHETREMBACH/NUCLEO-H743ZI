@@ -128,7 +128,8 @@ typedef struct
 #define QSPI_BK1_D2_GPIO_CLK_ENABLE()  __HAL_RCC_GPIOE_CLK_ENABLE()
 #define QSPI_BK1_D3_GPIO_CLK_ENABLE()  __HAL_RCC_GPIOD_CLK_ENABLE()
 
-
+#define QSPI_MDMA_CLK_ENABLE()         __HAL_RCC_MDMA_CLK_ENABLE()
+	 
 #define QSPI_FORCE_RESET()             __HAL_RCC_QSPI_FORCE_RESET()
 #define QSPI_RELEASE_RESET()           __HAL_RCC_QSPI_RELEASE_RESET()
 
@@ -180,6 +181,7 @@ int32_t BSP_QSPI_RegisterMspCallbacks (uint32_t Instance, BSP_QSPI_Cb_t *CallBac
 int32_t BSP_QSPI_RegisterDefaultMspCallbacks (uint32_t Instance);
 #endif /* (USE_HAL_QSPI_REGISTER_CALLBACKS == 1) */
 int32_t BSP_QSPI_Read(uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
+int32_t BSP_QSPI_DMARead(uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
 int32_t BSP_QSPI_Write(uint8_t *pData, uint32_t WriteAddr, uint32_t Size);
 int32_t BSP_QSPI_EraseBlock(uint32_t BlockAddress, BSP_QSPI_Erase_t BlockSize);
 int32_t BSP_QSPI_EraseChip(void);

@@ -95,6 +95,8 @@
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\stream_buffer.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\timers.c" />
+    <ClCompile Include="..\..\Libraries\LwIP\src\apps\http\fs.c" />
+    <ClCompile Include="..\..\Libraries\LwIP\src\apps\http\httpd.c" />
     <ClCompile Include="..\..\Libraries\LwIP_Port_Freertos\sys_arch.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c" />
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc.c" />

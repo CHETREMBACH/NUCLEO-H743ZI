@@ -29,7 +29,7 @@ int32_t BSP_QSPI_Init(void)
 	int32_t ret = BSP_ERROR_NONE;
 	BSP_QSPI_Info_t pInfo;
 	MX_QSPI_Init_t qspi_init;
-	static const uint32_t Prescaler = 0;
+	static const uint32_t Prescaler = 9;
 	
 	Init.InterfaceMode = W25Q128FV_SPI_MODE;
 	Init.DualFlashMode = W25Q128FV_DUALFLASH_DISABLE;	
@@ -219,7 +219,27 @@ int32_t BSP_QSPI_RegisterMspCallbacks (uint32_t Instance, BSP_QSPI_Cb_t *CallBac
 int32_t BSP_QSPI_Read(uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
 {
   int32_t ret = BSP_ERROR_NONE;
-      if(W25Q128FV_Read(&(pqspi.hqspi), pqspi.InterfaceMode, pData, ReadAddr, Size) != W25Q128FV_OK)
+	
+	if (W25Q128FV_Read(&(pqspi.hqspi), pqspi.InterfaceMode, pData, ReadAddr, Size) != W25Q128FV_OK)
+      {
+        ret = BSP_ERROR_COMPONENT_FAILURE;
+      }
+  /* Return BSP status */
+  return ret;
+}
+
+/**
+  * @brief  Reads an amount of data from the QSPI memory.
+  * @param  pData     Pointer to data to be read
+  * @param  ReadAddr  Read start address
+  * @param  Size      Size of data to read
+  * @retval BSP status
+  */
+int32_t BSP_QSPI_DMARead(uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
+{
+  int32_t ret = BSP_ERROR_NONE;
+	
+      if(W25Q128FV_DMARead(&(pqspi.hqspi), pqspi.InterfaceMode, pData, ReadAddr, Size) != W25Q128FV_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -574,13 +594,16 @@ int32_t BSP_QSPI_ConfigFlash(BSP_QSPI_Interface_t Mode)
 static void QSPI_MspInit(QSPI_HandleTypeDef *hQspi)
 {
   GPIO_InitTypeDef gpio_init_structure;
-
+  static MDMA_HandleTypeDef hmdma;
+	
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(hQspi);
+  //UNUSED(hQspi);
 
   /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* Enable the QuadSPI memory interface clock */
   QSPI_CLK_ENABLE();
+  QSPI_MDMA_CLK_ENABLE(); 		
+	
   /* Reset the QuadSPI memory interface */
   QSPI_FORCE_RESET();
   QSPI_RELEASE_RESET();
@@ -591,7 +614,7 @@ static void QSPI_MspInit(QSPI_HandleTypeDef *hQspi)
   QSPI_BK1_D1_GPIO_CLK_ENABLE();
   QSPI_BK1_D2_GPIO_CLK_ENABLE();
   QSPI_BK1_D3_GPIO_CLK_ENABLE();
-
+	
   /*##-2- Configure peripheral GPIO ##########################################*/
   /* QSPI CLK GPIO pin configuration  */
   gpio_init_structure.Mode      = GPIO_MODE_AF_PP;
@@ -632,6 +655,40 @@ static void QSPI_MspInit(QSPI_HandleTypeDef *hQspi)
   /* NVIC configuration for QSPI interrupt */
   //HAL_NVIC_SetPriority(QUADSPI_IRQn, 0x0F, 0);
   //HAL_NVIC_EnableIRQ(QUADSPI_IRQn);
+	
+  /*##-4- Configure the DMA channel ###########################################*/
+  /* Enable MDMA clock */
+  /* Input MDMA */
+  /* Set the parameters to be configured */ 
+  hmdma.Init.Request = MDMA_REQUEST_QUADSPI_FIFO_TH;
+  hmdma.Init.TransferTriggerMode = MDMA_BUFFER_TRANSFER;
+  hmdma.Init.Priority = MDMA_PRIORITY_HIGH;
+  hmdma.Init.Endianness = MDMA_LITTLE_ENDIANNESS_PRESERVE;
+  
+  hmdma.Init.SourceInc = MDMA_SRC_INC_BYTE;
+  hmdma.Init.DestinationInc = MDMA_DEST_INC_DISABLE;
+  hmdma.Init.SourceDataSize = MDMA_SRC_DATASIZE_BYTE;
+  hmdma.Init.DestDataSize = MDMA_DEST_DATASIZE_BYTE;
+  hmdma.Init.DataAlignment = MDMA_DATAALIGN_PACKENABLE;
+  hmdma.Init.BufferTransferLength = 4;
+  hmdma.Init.SourceBurst = MDMA_SOURCE_BURST_SINGLE;
+  hmdma.Init.DestBurst = MDMA_DEST_BURST_SINGLE;
+  
+  hmdma.Init.SourceBlockAddressOffset = 0;
+  hmdma.Init.DestBlockAddressOffset = 0;
+  
+  hmdma.Instance = MDMA_Channel1;
+
+	/* Associate the DMA handle */
+  __HAL_LINKDMA(hQspi, hmdma, hmdma);
+  
+  /* DeInitialize the MDMA Stream */
+  HAL_MDMA_DeInit(&hmdma);      
+  /* Initialize the MDMA stream */
+  HAL_MDMA_Init(&hmdma);	
+  /* Enable and set QuadSPI interrupt to the lowest priority */
+  //HAL_NVIC_SetPriority(MDMA_IRQn, 0x06, 0);
+  //HAL_NVIC_EnableIRQ(MDMA_IRQn);	
 }
 
 /**
@@ -706,5 +763,18 @@ static int32_t QSPI_ResetMemory(void)
 	/* Return BSP status */
 	return ret;
 }
+
+/**
+  * @brief  This function handles MDMA interrupt request.
+  * @param  None
+  * @retval None
+  */
+
+void MDMA_IRQHandler(void)
+{
+	/* Check the interrupt and clear flag */
+	HAL_MDMA_IRQHandler(pqspi.hqspi.hmdma);
+}
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

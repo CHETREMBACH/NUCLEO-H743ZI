@@ -18,6 +18,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal_qspi.h"
+#include "stm32h7xx_hal_mdma.h"
 #include "w25q128fv.h"
 #include "main.h"
 
@@ -263,16 +264,86 @@ int32_t W25Q128FV_PageProgram(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mod
   s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
   s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
   s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+	
   if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return W25Q128FV_ERROR_COMMAND;
   }
+	
   if (HAL_QSPI_Transmit(Ctx, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return W25Q128FV_ERROR_TRANSMIT;
   }
+	
   return W25Q128FV_OK;
 }
+
+/**
+  * @brief Receive an amount of data in blocking mode.
+  * @param hqspi : QSPI handle
+  * @param pData : pointer to data buffer
+  * @param Timeout : Timeout duration
+  * @note   This function is used only in Indirect Read Mode
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_QSPI_FastReceive(QSPI_HandleTypeDef *hqspi, uint8_t *pData, uint32_t Timeout)
+{
+	HAL_StatusTypeDef status = HAL_OK;
+	uint32_t addr_reg = READ_REG(hqspi->Instance->AR);
+	__IO uint32_t *data_reg = &hqspi->Instance->DR;
+	uint8_t  *pRxBuffFin;
+		
+	/* Process locked */
+	__HAL_LOCK(hqspi);
+
+	if (hqspi->State == HAL_QSPI_STATE_READY)
+	{
+		hqspi->ErrorCode = HAL_QSPI_ERROR_NONE;
+
+		if (pData != NULL)
+		{
+			/* Update state */
+			hqspi->State = HAL_QSPI_STATE_BUSY_INDIRECT_RX;
+
+			/* Configure counters and size of the handle */
+			hqspi->RxXferCount = READ_REG(hqspi->Instance->DLR) + 1U;
+			hqspi->RxXferSize = READ_REG(hqspi->Instance->DLR) + 1U;
+			hqspi->pRxBuffPtr = pData;
+
+			pRxBuffFin = hqspi->pRxBuffPtr + hqspi->RxXferCount; 
+			
+			/* Configure QSPI: CCR register with functional as indirect read */
+			MODIFY_REG(hqspi->Instance->CCR, QUADSPI_CCR_FMODE, ((uint32_t)QUADSPI_CCR_FMODE_0));
+
+			/* Start the transfer by re-writing the address in AR register */
+			WRITE_REG(hqspi->Instance->AR, addr_reg);
+
+			while (hqspi->pRxBuffPtr < pRxBuffFin)
+			{
+				while(!((hqspi->Instance->SR)&(QSPI_FLAG_FT | QSPI_FLAG_TC))) {};
+                *hqspi->pRxBuffPtr = *((__IO uint8_t *)data_reg);
+				hqspi->pRxBuffPtr++;
+			}
+			/* Update QSPI state */
+			hqspi->State = HAL_QSPI_STATE_READY;
+		}
+		else
+		{
+			hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
+			status = HAL_ERROR;
+		}
+	}
+	else
+	{
+		status = HAL_BUSY;
+	}
+
+	/* Process unlocked */
+	__HAL_UNLOCK(hqspi);
+
+	return status;
+}
+
 
 /**
   * @brief  Reads an amount of data from the QSPI memory.
@@ -325,13 +396,86 @@ int32_t W25Q128FV_Read(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint
   }
 
   /* Reception of the data */
-  if (HAL_QSPI_Receive(Ctx, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	if (HAL_QSPI_FastReceive(Ctx, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return W25Q128FV_ERROR_RECEIVE;
   }
 
   return W25Q128FV_OK;
 
+}
+
+/**
+  * @brief  Reads an amount of data from the QSPI memory.
+  *         SPI/QPI; 1-1-1/1-1-2/1-1-4/4-4-4
+  * @param  Ctx Component object pointer
+  * @param  Mode Interface mode
+  * @param  pData Pointer to data to be read
+  * @param  ReadAddr Read start address
+  * @param  Size Size of data to read
+  * @retval QSPI memory status
+  */
+
+int32_t W25Q128FV_DMARead(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
+{
+	QSPI_CommandTypeDef s_command;
+	switch (Mode)
+	{
+	default :	  
+	case W25Q128FV_SPI_MODE:      /* 1-1-1 read commands */
+		s_command.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
+		s_command.Instruction       = W25Q128FV_FAST_READ_CMD;
+		s_command.AddressMode       = QSPI_ADDRESS_1_LINE;
+		s_command.DataMode          = QSPI_DATA_1_LINE;
+		s_command.DummyCycles       = 8;
+
+		break;
+
+	case W25Q128FV_QPI_MODE:      /* 4-4-4 commands */
+		s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
+		s_command.Instruction       = W25Q128FV_FAST_READ_CMD;
+		s_command.AddressMode       = QSPI_ADDRESS_4_LINES;
+		s_command.DataMode          = QSPI_DATA_4_LINES;
+		s_command.DummyCycles       = 2; 
+
+		break;
+	}
+	/* Initialize the read command */
+	s_command.AddressSize       = QSPI_ADDRESS_24_BITS;
+	s_command.Address           = ReadAddr;
+	s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+	s_command.NbData            = Size;
+	s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
+	s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+	s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+
+	/* Configure the command */
+	if (HAL_QSPI_Command(Ctx, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	{
+		return W25Q128FV_ERROR_COMMAND;
+	}
+
+	/* Reception of the data */
+//	if (HAL_QSPI_Receive(Ctx, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+//	{
+//		return W25Q128FV_ERROR_RECEIVE;
+//	}
+
+	__HAL_MDMA_CLEAR_FLAG(Ctx->hmdma, (MDMA_FLAG_BRT | MDMA_FLAG_BT | MDMA_FLAG_BFTC | MDMA_FLAG_CTC));
+
+	/* Process unlocked */
+	__HAL_UNLOCK(Ctx->hmdma);
+	
+	if (HAL_QSPI_Receive_DMA(Ctx, pData) != HAL_OK)
+	{
+		return W25Q128FV_ERROR_RECEIVE;
+	}
+		
+	if (HAL_MDMA_PollForTransfer(Ctx->hmdma, HAL_MDMA_XFER_CPLT_CB_ID, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+	{
+		return W25Q128FV_ERROR_RECEIVE;		
+	}
+	return W25Q128FV_OK;
 }
 
 /**

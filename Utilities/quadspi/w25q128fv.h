@@ -194,6 +194,7 @@ typedef enum
  int32_t W25Q128FV_ChipErase(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode);
  int32_t W25Q128FV_PageProgram(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *pData, uint32_t WriteAddr, uint32_t Size);
  int32_t W25Q128FV_Read(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
+ int32_t W25Q128FV_DMARead(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
  int32_t W25Q128FV_ReadStatusRegister(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *Value);
  int32_t W25Q128FV_ReadStatusAllRegister(QSPI_HandleTypeDef *Ctx, W25Q128FV_Interface_t Mode, uint8_t *Value);
  int32_t W25Q128FV_EnterQPIMode(QSPI_HandleTypeDef *Ctx);

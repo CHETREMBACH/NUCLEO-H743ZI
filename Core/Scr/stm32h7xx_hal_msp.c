@@ -45,7 +45,7 @@ void SystemClock_Config(void)
 	/** Initializes the CPU, AHB and APB busses clocks 
 	*/
 	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-	RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
 	RCC_OscInitStruct.PLL.PLLM = 1;
@@ -95,7 +95,7 @@ void SystemClock_Config(void)
 		Error_Handler((const char*)"Initializes the UART3 and USB clocks");
 	}
 	
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_QSPI;
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART1;
 	PeriphClkInitStruct.PLL2.PLL2M = 1;
 	PeriphClkInitStruct.PLL2.PLL2N = 30;
 	PeriphClkInitStruct.PLL2.PLL2P = 2;
@@ -108,8 +108,15 @@ void SystemClock_Config(void)
 	PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_D2PCLK2;
 	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
 	{
-		Error_Handler((const char*)"Initializes the UART1 and QSPI clocks");
+		Error_Handler((const char*)"Initializes the UART1 clocks");
 	}		
+	
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_QSPI;
+	PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_PLL;
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+	{
+		Error_Handler((const char*)"Initializes the QSPI clocks");
+	}	
 	
 	
 }

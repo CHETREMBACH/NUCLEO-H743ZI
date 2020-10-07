@@ -91,9 +91,9 @@ DRESULT w25qxx_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
   
 	while (count--)
 	{
-	
 		//printf(" Read sector %.5lu \n", sector); 
-		BSP_QSPI_Read(buff, sector*FLASH_SUBSECTOR_SIZE, FLASH_SUBSECTOR_SIZE);  
+		//BSP_QSPI_DMARead(buff, sector*FLASH_SUBSECTOR_SIZE, FLASH_SUBSECTOR_SIZE);  
+		BSP_QSPI_Read(buff, sector*FLASH_SUBSECTOR_SIZE, FLASH_SUBSECTOR_SIZE); 		
 		sector++;
 		buff += FLASH_SUBSECTOR_SIZE;
 	}  
