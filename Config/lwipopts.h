@@ -77,13 +77,12 @@ a lot of data that needs to be copied, this should be set high. */
    timeouts. */
 #define MEMP_NUM_SYS_TIMEOUT    10
 
-
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool.
    @ note: used to allocate Tx pbufs only */
 #define PBUF_POOL_SIZE          8
 
-/* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
+/* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool */
 #define PBUF_POOL_BUFSIZE       1528
 
 /* LWIP_SUPPORT_CUSTOM_PBUF == 1: to pass directly MAC Rx buffers to the stack 
@@ -109,7 +108,6 @@ a lot of data that needs to be copied, this should be set high. */
 
 /*  TCP_SND_QUEUELEN: TCP sender buffer space (pbufs). This must be at least
   as much as (2 * TCP_SND_BUF/TCP_MSS) for things to work. */
-
 #define TCP_SND_QUEUELEN        (2* TCP_SND_BUF/TCP_MSS)
 
 /* TCP receive window. */
@@ -166,11 +164,10 @@ The STM32H7xx allows computing and verifying the IP, UDP, TCP and ICMP checksums
   /* CHECKSUM_CHECK_TCP==0: Check checksums by hardware for incoming TCP packets.*/
   #define CHECKSUM_CHECK_TCP              0
   /* CHECKSUM_GEN_ICMP==1: Check checksums by hardware for outgoing ICMP packets.*/
-  /* Hardware TCP/UDP checksum insertion not supported when packet is an IPv4 fragment */
+  /* Hardware TCP/UDP checksum insertion not supported when packet is an IPv4 fragment*/
   #define CHECKSUM_GEN_ICMP               1
   /* CHECKSUM_CHECK_ICMP==0: Check checksums by hardware for incoming ICMP packets.*/
   #define CHECKSUM_CHECK_ICMP             0
-
 #else
   /* CHECKSUM_GEN_IP==1: Generate checksums in software for outgoing IP packets.*/
   #define CHECKSUM_GEN_IP                 1
@@ -216,10 +213,16 @@ The STM32H7xx allows computing and verifying the IP, UDP, TCP and ICMP checksums
    ---------- httpd options ----------
    ------------------------------------
 */
+
+/** Set this to 1 to support CGI */
+#define LWIP_HTTPD_CGI            1
+
+/** Set this to 1 to support SSI (Server-Side-Includes) */
+#define LWIP_HTTPD_SSI            1
+
 /** Set this to 1 to include "fsdata_custom.c" instead of "fsdata.c" for the
  * file system (to prevent changing the file included in CVS) */
-#define HTTPD_USE_CUSTOM_FSDATA         0
-
+#define HTTPD_USE_CUSTOM_FSDATA   1
 
 /*
    ---------------------------------

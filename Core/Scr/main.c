@@ -27,10 +27,57 @@ volatile const char __version__[] = "NUCLEO-H743ZI";
 volatile const char __date__[] = __DATE__;
 volatile const char __time__[] = __TIME__;
 
+//Структура отсчета времени работы
+TimeWorkTypeDef  SysWorkTime;	
+
 /**
   * Initializes the Global MSP.
   */
 void InitClock(void);
+
+/**
+ * @brief  Функция подсчета времени(секунд) работы системы.
+ * @param  None
+ * @retval None
+ */
+void update_time_work(void)
+{
+	/* подсчет общего числа секунд */
+	SysWorkTime.all_second++;
+  
+	/* подсчет секунд в течении минуты */
+	if (SysWorkTime.second > 58)
+	{
+		SysWorkTime.second = 0;
+		/* подсчет минут в течении часа */
+		if (SysWorkTime.minute > 58)
+		{
+			SysWorkTime.minute = 0;
+			/* подсчет часов в течении дня */
+			if (SysWorkTime.hour > 22)
+			{
+				SysWorkTime.hour = 0;
+				/* подсчет дней */
+				SysWorkTime.day++;
+			}
+			else SysWorkTime.hour++;
+		}
+		else SysWorkTime.minute++;
+	}
+	else SysWorkTime.second++;
+}
+
+
+/**
+ * @brief  Функция вызываемая основной задачей системы 1 раз в секунду.
+ * @param  None
+ * @retval None
+ */
+void system_thread_periodic_func(void) 
+{
+	/* Подсчет времени работы */
+	update_time_work();
+}
 
 /**
  * @brief  Start Thread 
@@ -39,6 +86,9 @@ void InitClock(void);
  */
 void system_thread(void *arg)
 { 
+	/* Переменная формирования периода вызова задачи */
+	TickType_t xLastWakeTime;
+	
 	//Подключение интерфейса отладки
 	DBG_Hardware_Setup();
 
@@ -63,9 +113,25 @@ void system_thread(void *arg)
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
 
-	for (;;) {
-		vTaskDelay(500);	
-	}
+	/* Инициализации структуры отсчета времени работы */
+	SysWorkTime.all_second = 0;
+	SysWorkTime.second = 0;
+	SysWorkTime.minute = 0;
+	SysWorkTime.hour = 0;
+	SysWorkTime.day = 0;
+	/* Система запушена */
+  
+	/* Инициализация переменной xLastWakeTime на текущее время. */
+	xLastWakeTime = xTaskGetTickCount();
+
+	/* Тело стартовой задачи - для вспомогательных вычислений.  */
+	for (;;)
+	{
+		/* Функция вызываемая основной задачей системы 1 раз в секунду */
+		system_thread_periodic_func();
+		/* Ожидание до следующего цикла. */
+		vTaskDelayUntil(&xLastWakeTime, 1000);
+	}  
 }
 
 /**

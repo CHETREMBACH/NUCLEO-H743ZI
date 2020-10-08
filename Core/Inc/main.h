@@ -47,9 +47,24 @@ typedef enum {
 	TreadPrioHigh = configMAX_PRIORITIES - 2,         /*< priority: high               */
 	TreadPrioRealtime = configMAX_PRIORITIES - 1,     /*< priority: realtime (highest) */
 } thread_prio_t; 
-	
 
-	/*Static IP ADDRESS*/
+/** 
+  * @brief описание структуры отсчета времени работы  
+  */ 
+typedef struct
+{
+	uint32_t all_second;   //всего секунд
+	uint16_t day;          // число дней
+	uint8_t  hour;         // число часов
+	uint8_t  minute;       // число минут
+	uint8_t  second;       // число секунд
+}TimeWorkTypeDef; 
+
+//Структура отсчета времени работы
+extern TimeWorkTypeDef  SysWorkTime;	
+
+
+/*Static IP ADDRESS*/
 #define IP_ADDR0   192
 #define IP_ADDR1   168
 #define IP_ADDR2   1

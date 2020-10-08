@@ -26,6 +26,7 @@
 #include "ethernetif.h"
 #include "lwip/netif.h"
 #include "lwip/tcpip.h"
+#include "http_cgi_ssi.h"
 
 struct netif gnetif; /* network interface structure */
 
@@ -190,7 +191,7 @@ void InitLwIP(void)
   /* Initialize the LwIP stack */
   Netif_Config();
   
-  /* Initialize webserver demo */
-  //http_server_netconn_init();
+  /* Http webserver Init */
+  http_server_init();
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

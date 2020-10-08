@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries\BSP\Components;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Libraries\LwIP\src\include;../../Libraries\LwIP_Port_Freertos\include;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities\Utilities\quadspi;../../Utilities/LwIP_drv;../../Utilities/FatFs;../../Utilities/quadspi;../../Libraries/FatFs/source;../../Utilities/tftpserver;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries\BSP\Components;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Libraries\LwIP\src\include;../../Libraries\LwIP_Port_Freertos\include;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities\Utilities\quadspi;../../Utilities/LwIP_drv;../../Utilities/FatFs;../../Utilities/quadspi;../../Libraries/FatFs/source;../../Utilities\html;../../Utilities/tftpserver;../../Libraries/LwIP/src/apps;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;DBG_PIN_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard>C17</CLanguageStandard>
@@ -218,6 +218,8 @@
     <ClCompile Include="..\..\Utilities\FatFs\diskio.c" />
     <ClCompile Include="..\..\Utilities\FatFs\ff_gen_drv.c" />
     <ClCompile Include="..\..\Utilities\FatFs\w25qxx_diskio.c" />
+    <ClCompile Include="..\..\Utilities\html\httpd_cgi_ssi.c" />
+    <ClCompile Include="..\..\Utilities\html\httpd_main.c" />
     <ClCompile Include="..\..\Utilities\LwIP_drv\app_ethernet.c" />
     <ClCompile Include="..\..\Utilities\LwIP_drv\ethernetif.c" />
     <ClCompile Include="..\..\Utilities\quadspi\cmd_qspi_flash.c" />
@@ -292,6 +294,8 @@
     <ClInclude Include="..\..\Utilities\FatFs\ffconf.h" />
     <ClInclude Include="..\..\Utilities\FatFs\ff_gen_drv.h" />
     <ClInclude Include="..\..\Utilities\FatFs\w25qxx_diskio.h" />
+    <ClInclude Include="..\..\Utilities\html\httpd_main.h" />
+    <ClInclude Include="..\..\Utilities\html\http_cgi_ssi.h" />
     <ClInclude Include="..\..\Utilities\LwIP_drv\app_ethernet.h" />
     <ClInclude Include="..\..\Utilities\LwIP_drv\ethernetif.h" />
     <ClInclude Include="..\..\Utilities\quadspi\cmd_qspi_flash.h" />
