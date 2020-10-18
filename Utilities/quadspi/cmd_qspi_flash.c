@@ -110,12 +110,26 @@ uint16_t fatfs_handler(cmd_parametr_t *parametr)
 			return 0;
 		}
 		
+		if (strcmp(parametr->var_ch, "status") == 0)
+		{
+			temp_box_qflash.cmd_fatfs.id_mode = MODE_STATUS;
+			send_cmd_box(&temp_box_qflash);	
+			return 0;
+		}    
+		
+		if (strcmp(parametr->var_ch, "param") == 0)
+		{
+			temp_box_qflash.cmd_fatfs.id_mode = MODE_PARAM;
+			send_cmd_box(&temp_box_qflash);	
+			return 0;
+		}   		
+		
 		if (strcmp(parametr->var_ch, "mount") == 0)
 		{
 			temp_box_qflash.cmd_fatfs.id_mode = MODE_MOUNT;
 			send_cmd_box(&temp_box_qflash);	
 			return 0;
-		}    
+		}   		
 		
 		if (strcmp(parametr->var_ch, "wr") == 0)    
 		{  

@@ -19,13 +19,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-FATFS USERFatFS;
+extern FATFS filesystem;
 uint8_t work_buff[FF_MAX_SS];
 
 //#define DATA_SIZE 4096  
 //static uint8_t data_buffer[DATA_SIZE];
-
-char FlashPath[4]; /* flash card logical drive path */
 
 FIL USERFile; /* File object for USER */
 
@@ -71,18 +69,6 @@ void StatusDiscPrint(FRESULT RezMesh)
 	}
 }
 
-
-/**
-  * @brief  Link the disk I/O driver.
-  * @param  None 
-  * @retval None
-  */
-void CmdLinkDriver(void)
-{
-	/* Link the disk I/O driver */
-	FATFS_LinkDriver(&Diskio_Driver, FlashPath);   
-}
-
 /**
   * @brief  Форматирование диска.
   * @param  None 
@@ -91,7 +77,6 @@ void CmdLinkDriver(void)
 void CmdFmkfs(void)
 {
 	/* Форматирование диска */
-	//StatusDiscPrint(f_mkfs("0:", FM_ANY, 0, work_buff, sizeof(work_buff)));
 	MKFS_PARM   param;
 	param.align = 0;           //Data area alignment (sector)
 	param.au_size = 4096;      //Cluster size (byte)
@@ -101,6 +86,56 @@ void CmdFmkfs(void)
         
 	StatusDiscPrint(f_mkfs( "0:", &param,work_buff,sizeof(work_buff)));       
 }
+
+
+/**
+  * @brief  Параметры диска.
+  * @param  None 
+  * @retval None
+  */
+void CmdParam(void)
+{
+
+	
+}
+
+/**
+  * @brief  Статус диска.
+  * @param  None 
+  * @retval None
+  */
+void CmdStatus(void)
+{
+   
+	
+	
+	
+}
+
+/**
+  * @brief  открыть дирректорию.
+  * @param  None 
+  * @retval None
+  */
+void CmdCD(void)
+{
+
+	
+}
+
+
+/**
+  * @brief  просмотреть дирректорию.
+  * @param  None 
+  * @retval None
+  */
+void CmdDir(void)
+{
+
+	
+}
+
+
 
 /**
   * @brief  Форматирование диска.
@@ -112,10 +147,10 @@ void CmdFmount(void)
 	FRESULT res;
 	
 	/* Монтирование диска */
-	StatusDiscPrint(f_mount(&USERFatFS, "0:", 1));
+	StatusDiscPrint(f_mount(&filesystem, "0:", 1));
 	
 	uint32_t freeClust;
-	FATFS* fs_ptr = &USERFatFS;
+	FATFS* fs_ptr = &filesystem;
 	// Warning! This fills fs.n_fatent and fs.csize!
 	if (f_getfree("", &freeClust, &fs_ptr) != FR_OK) {
 		printf("f_getfree() failed\r\n");
@@ -124,8 +159,8 @@ void CmdFmount(void)
 	
 	printf("f_getfree() done!\r\n");
 
-	uint32_t totalBlocks = (USERFatFS.n_fatent - 2) * USERFatFS.csize;
-	uint32_t freeBlocks = freeClust * USERFatFS.csize;
+	uint32_t totalBlocks = (filesystem.n_fatent - 2) * filesystem.csize;
+	uint32_t freeBlocks = freeClust * filesystem.csize;
 
 	printf("Total blocks: %lu (%lu Mb)\r\n", totalBlocks, totalBlocks / 256);
 	printf("Free  blocks: %lu (%lu Mb)\r\n", freeBlocks, freeBlocks / 256);	
@@ -208,7 +243,7 @@ void CmdFmount(void)
 
 	printf("Reading file...\r\n");
 	FIL msgFile;
-	res = f_open(&msgFile, "log.txt", FA_READ);
+	res = f_open(&msgFile, "logo.jpg", FA_READ);
 	if (res != FR_OK) {
 		printf("f_open() failed, res = %d\r\n", res);
 		return;

@@ -135,17 +135,17 @@ void DHCP_Thread(void const * argument)
 }
 #endif  /* LWIP_DHCP */
 
+  ip_addr_t ipaddr;
+  ip_addr_t netmask;
+  ip_addr_t gw;
+
 /**
   * @brief  Initializes the lwIP stack
   * @param  None
   * @retval None
   */
 static void Netif_Config(void)
-{
-  ip_addr_t ipaddr;
-  ip_addr_t netmask;
-  ip_addr_t gw;
- 
+{ 
 #if LWIP_DHCP
   ip_addr_set_zero_ip4(&ipaddr);
   ip_addr_set_zero_ip4(&netmask);

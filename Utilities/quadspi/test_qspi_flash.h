@@ -33,6 +33,7 @@ typedef enum
 typedef enum
 { 
 	 MODE_STATUS = 0,
+	 MODE_PARAM,
 	 MODE_FORMAT,
 	 MODE_MOUNT,
 	 MODE_WRITE,

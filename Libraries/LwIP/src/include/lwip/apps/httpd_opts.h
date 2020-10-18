@@ -215,12 +215,12 @@
  * - reset when pcb->sent is called
  */
 #if !defined HTTPD_MAX_RETRIES || defined __DOXYGEN__
-#define HTTPD_MAX_RETRIES                   4
+#define HTTPD_MAX_RETRIES                   1
 #endif
 
 /** The poll delay is X*500ms */
 #if !defined HTTPD_POLL_INTERVAL || defined __DOXYGEN__
-#define HTTPD_POLL_INTERVAL                 4
+#define HTTPD_POLL_INTERVAL                 1
 #endif
 
 /** Priority for tcp pcbs created by HTTPD (very low by default).
@@ -335,7 +335,7 @@
 /* By default, the httpd is limited to send 2*pcb->mss to keep resource usage low
    when http is not an important protocol in the device. */
 #if !defined HTTPD_LIMIT_SENDING_TO_2MSS || defined __DOXYGEN__
-#define HTTPD_LIMIT_SENDING_TO_2MSS 1
+#define HTTPD_LIMIT_SENDING_TO_2MSS 0
 #endif
 
 /* Define this to a function that returns the maximum amount of data to enqueue.

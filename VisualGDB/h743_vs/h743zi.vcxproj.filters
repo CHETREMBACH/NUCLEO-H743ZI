@@ -223,6 +223,9 @@
     <Filter Include="Utilites\html">
       <UniqueIdentifier>{cf9f9c6c-32af-48ea-8926-92442aefdb57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilites\ftpserver">
+      <UniqueIdentifier>{986f4ae5-7020-40b2-bd4e-954d94c6c130}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="h743zi-Debug.vgdbsettings">
@@ -1064,6 +1067,12 @@
     <ClInclude Include="..\..\Utilities\html\httpd_main.h">
       <Filter>Utilites\html</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Utilities\ftpserver\cmds.h">
+      <Filter>Utilites\ftpserver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\ftpserver\ftpd.h">
+      <Filter>Utilites\ftpserver</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\croutine.c">
@@ -1086,9 +1095,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\timers.c">
       <Filter>Libraries\FreeRTOS\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\MemMang\heap_2.c">
-      <Filter>Libraries\FreeRTOS\Source\portable\MemMang</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
@@ -1518,6 +1524,18 @@
     </ClCompile>
     <ClCompile Include="..\..\Utilities\html\httpd_main.c">
       <Filter>Utilites\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\html\fs_custom.c">
+      <Filter>Utilites\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\MemMang\heap_4.c">
+      <Filter>Libraries\FreeRTOS\Source\portable\MemMang</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\ftpserver\ftpd.c">
+      <Filter>Utilites\ftpserver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\ftpserver\cmds.c">
+      <Filter>Utilites\ftpserver</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

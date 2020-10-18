@@ -24,6 +24,9 @@
 #include "lwip/apps/httpd.h"
 #include "http_cgi_ssi.h"
 
+//#include "fs_custom.h"
+#include "https_example.h"
+
 #include "printf_dbg.h"
 
 #include <string.h>
@@ -143,9 +146,17 @@ const char * LEDS_CGI_Handler(int iIndex, int iNumParams, char *pcParam[], char 
   */
 void http_server_init(void)
 {
+	
+#if LWIP_HTTPD_APP && LWIP_TCP
+#if defined(LWIP_HTTPD_EXAMPLE_CUSTOMFILES) && LWIP_HTTPD_EXAMPLE_CUSTOMFILES && defined(LWIP_HTTPD_EXAMPLE_CUSTOMFILES_ROOTDIR)
+	fs_ex_init(LWIP_HTTPD_EXAMPLE_CUSTOMFILES_ROOTDIR);
+#endif
 	/* Httpd Init */
 	httpd_init();
 
+#endif /* LWIP_HTTPD_APP && LWIP_TCP */
+	
+	
 	/* configure SSI handlers (ADC page SSI) */
 	http_set_ssi_handler(Time_Handler, (char const **)TAGS, 1);
 

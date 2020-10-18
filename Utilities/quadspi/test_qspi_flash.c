@@ -319,8 +319,10 @@ void cmd_fatfs_hndlr(cmd_fatfs_qflash_t* cmd_param)
 	{
 	case   MODE_FORMAT:  CmdFmkfs(); break;/* Монтирование диска.*/
 	case    MODE_MOUNT: CmdFmount(); break;/* Форматирование диска.*/
-	case    MODE_WRITE: CmdFwrite(); break;/* Запись файла.*/		
-	case     MODE_READ:  CmdFread(); break;/* Чтение файла.*/		
+	case   MODE_STATUS: CmdStatus(); break;/* Статус диска. */	
+	case   MODE_PARAM:   CmdParam(); break;/* Параметры диска. */			
+	case    MODE_WRITE: CmdFwrite(); break;/* Запись файла. */		
+	case     MODE_READ:  CmdFread(); break;/* Чтение файла. */			
 		
 	default:
 		return;

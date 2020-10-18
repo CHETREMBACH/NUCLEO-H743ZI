@@ -22,6 +22,7 @@
 #include "ff.h"
 #include <string.h>
 
+extern FATFS filesystem;
 
 typedef struct
 {
@@ -47,10 +48,8 @@ typedef struct
 
 }tftp_connection_args;
 
-FATFS filesystem;
 FIL file_SD, file_CR;
 DIR dir_1, dir_2;
-extern char FlashPath[4];
 
 /* UDPpcb to be binded with port 69  */
 struct udp_pcb *UDPpcb;
@@ -606,7 +605,6 @@ void recv_callback_tftp(void *arg, struct udp_pcb *upcb, struct pbuf *pkt_buf,
   /* free pbuf */
   pbuf_free(pkt_buf);
 }
-
 
 
 /**

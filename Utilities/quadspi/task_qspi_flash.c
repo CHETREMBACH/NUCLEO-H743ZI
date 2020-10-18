@@ -21,7 +21,7 @@
 #include "pin_dbg.h"
 #include "test_qspi_flash.h"
 #include "tftpserver.h"
-
+#include "w25qxx_diskio.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -164,42 +164,10 @@ void qFlash_Task(void * pvParameters)
   */
 void qFlashInit(void)
 {
-	uint8_t id_code[5];
-	/*Initialize the QSPI in memory mapped mode*/
-
-	BSP_QSPI_Init();
-	BSP_QSPI_ReadID(id_code);
-	BSP_QSPI_ConfigFlash(W25Q128FV_QPI_MODE);
-	BSP_QSPI_ReadID(id_code);
-	
 	/* Link the disk I/O driver. */
-	CmdLinkDriver();
-	
+	FATFSLinkDriver();
 	/* Initialize the TFTP server */
 	tftpd_init();
-	
-//	for (uint16_t cntic = 0; cntic < 256; cntic++)
-//	{
-//		data_buf[cntic] = cntic;
-//	}
-//	data_buf[255] = 55;
-//	
-//	BlocDampPrint(data_buf,256);
-//	
-//	//BSP_QSPI_EraseBlock(4096, W25Q128FV_ERASE_4K);
-//		
-//	BSP_QSPI_Write(data_buf, 4096, 256);
-//	
-//	for (uint16_t cntic = 0; cntic < 256; cntic++)
-//	{
-//		data_buf[cntic] = 0;
-//	}
-//	
-//	T1_LO;
-//	
-//	BSP_QSPI_Read(data_buf, 4096, 256);
-//	BlocDampPrint(data_buf, 256);
-	
 	
 	/* Инициализация задачи */ 
 	xTaskCreate(qFlash_Task, (const char*)"QS_FLSH_TSK", configMINIMAL_STACK_SIZE * 12, NULL, TreadPrioBelowNormal, &qFlashHandleTask);	

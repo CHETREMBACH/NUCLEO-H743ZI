@@ -20,14 +20,6 @@
 #endif
 	 
 /* Includes ------------------------------------------------------------------*/
-
-	 
-/**
-  * @brief  Link the disk I/O driver.
-  * @param  None 
-  * @retval None
-  */ 
-void CmdLinkDriver(void);
 	 
 /**
   * @brief  Форматирование диска.
@@ -42,6 +34,20 @@ void CmdFmkfs(void);
   * @retval None
   */
 void CmdFmount(void);
+
+/**
+  * @brief  Параметры диска.
+  * @param  None 
+  * @retval None
+  */
+void CmdParam(void);
+
+/**
+  * @brief  Статус диска.
+  * @param  None 
+  * @retval None
+  */
+void CmdStatus(void);
 
 /**
   * @brief  Запись файла.

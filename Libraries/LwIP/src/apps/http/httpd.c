@@ -1574,6 +1574,9 @@ http_send_data_ssi(struct altcp_pcb *pcb, struct http_state *hs)
 static u8_t
 http_send(struct altcp_pcb *pcb, struct http_state *hs)
 {
+  	
+  printf(">>http_send\n");		
+	
   u8_t data_to_send = HTTP_NO_DATA_TO_SEND;
 
   LWIP_DEBUGF(HTTPD_DEBUG | LWIP_DBG_TRACE, ("http_send: pcb=%p hs=%p left=%d\n", (void *)pcb,
