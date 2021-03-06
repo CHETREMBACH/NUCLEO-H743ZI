@@ -12,7 +12,6 @@
     <LiveWatches />
     <MaskInterruptsWhileStepping>false</MaskInterruptsWhileStepping>
     <MemoryWindowPreferences />
-    <FavoriteEmbeddedRegisters />
     <LiveVariables>
       <LiveVariable>
         <Expression>SystemCoreClock</Expression>
@@ -24,8 +23,12 @@
         </Breakpoint>
         <Plot>false</Plot>
         <IsCollapsed>false</IsCollapsed>
+        <IsFavorite>false</IsFavorite>
       </LiveVariable>
     </LiveVariables>
-    <NestedLiveVariableSettings />
+    <Suggestions>
+      <HardwareRegisterFilters />
+    </Suggestions>
+    <HardwareRegisters />
   </DebugPreferences>
 </VisualGDBUserPreferences>

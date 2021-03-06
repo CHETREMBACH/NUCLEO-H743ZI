@@ -56,11 +56,10 @@ void vApplicationTickHook(void)
 /**
   * @brief  Функция вызывается при переполнении стека FreeRTOS, 
   * @param  TaskHandle_t xTask - хэндл задачи
-  * @param  signed portCHAR *pcTaskName  - имя текущей задачи
+  * @param  char * pcTaskName  - имя текущей задачи
   * @retval None
   */
-void vApplicationStackOverflowHook(TaskHandle_t xTask,
-                                   signed portCHAR *pcTaskName)
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName)
 {
 /* Run time stack overflow checking is performed if
 configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook function is
