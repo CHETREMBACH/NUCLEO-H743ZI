@@ -18,6 +18,8 @@
 #include "main.h"
 /* Kernel includes. */
 #include "printf_dbg.h"
+#include "pin_dbg.h"
+#include "pulse_drv.h"
 #include "cmd_process.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
@@ -33,9 +35,7 @@ void system_thread(void *arg)
 { 
 	//Подключение интерфейса отладки
 	DBG_Hardware_Setup();
-
-	/* init code for LWIP */
-	//LWIP_Init();	
+	DBG_PIN_Setup();
 		
 	//Инициализация задачи диагностического терминала 
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
@@ -48,11 +48,27 @@ void system_thread(void *arg)
 	printf("   TIME: %s \r\n", __time__);
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
-  
+  	
+	/* Configures GPIO / Timer. */
+	Pulse_Init();	
 	
 	for (;;) {
-		vTaskDelay(500);
+		vTaskDelay(1000);
 	}
+}
+
+/**
+* @brief  CPU L1-Cache enable.
+* @param  None
+* @retval None
+*/
+static void CPU_CACHE_Enable(void)
+{
+	/* Enable I-Cache */
+	SCB_EnableICache();
+
+	/* Enable D-Cache */
+	SCB_EnableDCache();
 }
 
 /**
@@ -62,15 +78,14 @@ void system_thread(void *arg)
 int main(void)
 {
 	/* MCU Configuration--------------------------------------------------------*/
+    /* Enable the CPU Cache */
+	CPU_CACHE_Enable();	
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
-	
+	HAL_Init();	
 	/* Init thread */
-	xTaskCreate(system_thread, (const char*)"SysTask", configMINIMAL_STACK_SIZE * 2, NULL, TreadPrioNormal, NULL);
-	
+	xTaskCreate(system_thread, (const char*)"SysTask", configMINIMAL_STACK_SIZE * 2, NULL, TreadPrioNormal, NULL);	
 	/* Start scheduler */
-	vTaskStartScheduler();
-  
+	vTaskStartScheduler();  
 	/* We should never get here as control is now taken by the scheduler */
 	NVIC_SystemReset();
 	return 0;
@@ -96,8 +111,7 @@ void Error_Handler(void)
   */
 void assert_failed(uint8_t *file, uint32_t line)
 { 
-	/* User can add his own implementation to report the file name and line number,
-	   tex:  */
+	/* User can add his own implementation to report the file name and line number, tex:  */
 	printf("Wrong parameters value: file %s on line %lu\r\n", file, line);
 	while (1) ;
 }

@@ -21,6 +21,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Private variables ---------------------------------------------------------*/
+extern TIM_HandleTypeDef    TimHandle;
+
 /******************************************************************************/
 /*           Cortex Processor Interruption and Exception Handlers          */ 
 /******************************************************************************/

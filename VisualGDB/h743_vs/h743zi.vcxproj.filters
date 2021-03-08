@@ -85,6 +85,12 @@
     <Filter Include="Device-specific files">
       <UniqueIdentifier>{0714cd61-6123-46c0-89e9-8cdc61dd6b44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilites\indic_drv">
+      <UniqueIdentifier>{693e530d-15e5-47fa-9e01-f1b38cb05582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilites\pulse_drv">
+      <UniqueIdentifier>{f2a74609-d20c-4f5b-ad57-563eaf4e7075}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="h743zi-Debug.vgdbsettings">
@@ -280,6 +286,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Core\Inc\stm32h7xx_it.h">
       <Filter>Core\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\indic_drv\indic_drv.h">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\pulse_drv\pulse_drv.h">
+      <Filter>Utilites\pulse_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\uart_dbg\pin_dbg.h">
+      <Filter>Utilites\uart_dbg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -675,6 +690,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Core\Scr\system_stm32h7xx.c">
       <Filter>Core\Scr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\indic_drv\indic_drv.c">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\pulse_drv\pulse_drv.c">
+      <Filter>Utilites\pulse_drv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\uart_dbg\pin_dbg.c">
+      <Filter>Utilites\uart_dbg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

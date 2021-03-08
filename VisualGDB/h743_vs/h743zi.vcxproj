@@ -41,16 +41,16 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FREERTOS;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/indic_drv;../../Utilities/pulse_drv;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FREERTOS;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;DBG_PIN_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard>C17</CLanguageStandard>
       <CPPLanguageStandard>CPP1Z</CPPLanguageStandard>
     </ClCompile>
     <Link>
-      <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <LibrarySearchDirectories>%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <AdditionalOptions />
       <LinkerScript>../../Config/STM32H743ZI_flash_dram.lds</LinkerScript>
       <GenerateMapFile>false</GenerateMapFile>
@@ -211,6 +211,9 @@
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_hdl.c" />
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_hlp.c" />
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_process.c" />
+    <ClCompile Include="..\..\Utilities\indic_drv\indic_drv.c" />
+    <ClCompile Include="..\..\Utilities\pulse_drv\pulse_drv.c" />
+    <ClCompile Include="..\..\Utilities\uart_dbg\pin_dbg.c" />
     <ClCompile Include="..\..\Utilities\uart_dbg\printf_dbg.c" />
     <ClCompile Include="..\..\Utilities\uart_dbg\uart_dbg.c" />
     <ClInclude Include="..\..\Config\FreeRTOSConfig.h" />
@@ -268,6 +271,9 @@
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_hdl.h" />
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_hlp.h" />
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_process.h" />
+    <ClInclude Include="..\..\Utilities\indic_drv\indic_drv.h" />
+    <ClInclude Include="..\..\Utilities\pulse_drv\pulse_drv.h" />
+    <ClInclude Include="..\..\Utilities\uart_dbg\pin_dbg.h" />
     <ClInclude Include="..\..\Utilities\uart_dbg\printf_dbg.h" />
     <ClInclude Include="..\..\Utilities\uart_dbg\uart_dbg.h" />
     <None Include="h743zi-Debug.vgdbsettings" />
