@@ -18,7 +18,7 @@
 
   /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-  
+
 /**
   * @brief  Configures Indic.
   * @param  None 

@@ -31,6 +31,8 @@ uint32_t time_pulse	= 750;
 uint32_t time_period = 2250;
 int32_t offset_control = 0;
 
+int32_t En_GetData(void);
+
 /**
   * @brief  This function handles TIM interrupt request.
   * @param  None
@@ -38,8 +40,7 @@ int32_t offset_control = 0;
   */
 void TIM2_IRQHandler(void)
 {   
-	T1_HI;
-	T2_HI;
+	int32_t temp_data = En_GetData();
 	/* TIM Update event */
 	if (__HAL_TIM_GET_IT_SOURCE(&TimHandle, TIM_IT_UPDATE) != RESET)
 	{
@@ -54,11 +55,9 @@ void TIM2_IRQHandler(void)
 			offset_control++;
 		}
 		
-		TIM2->CCR3 = (((start_time + time_pulse) * 200) - 1) + offset_control;
-		TIM2->CCR4 = (((start_time + time_pulse + time_pulse) * 200)) - 1 + offset_control;
-		T2_LO;			
+		TIM2->CCR3 = (((start_time + time_pulse) * 200) - 1) + temp_data;
+		TIM2->CCR4 = (((start_time + time_pulse + time_pulse) * 200)) - 1 + temp_data;
 	}
-	T1_LO;
 }
 
 
@@ -86,22 +85,22 @@ void Pulse_Init(void)
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	/* PB3 TM2_CH2 */
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
-	GPIO_InitStruct.Pin = GPIO_PIN_3;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	//__HAL_RCC_GPIOB_CLK_ENABLE();
+	//GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
+	//GPIO_InitStruct.Pin = GPIO_PIN_3;
+	//HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	/* PB10 TM2_CH4 */
+	/* PB10 TM2_CH3 */
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
 	GPIO_InitStruct.Pin = GPIO_PIN_10;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	/* PB11 TM2_CH1 */
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
-	GPIO_InitStruct.Pin = GPIO_PIN_11;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	/* PB11 TM2_CH4 */
+	//__HAL_RCC_GPIOB_CLK_ENABLE();
+	//GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
+	//GPIO_InitStruct.Pin = GPIO_PIN_11;
+	//HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
 	/*##-2- Configure the NVIC for TIMx #########################################*/
 	HAL_NVIC_SetPriority(TIM2_IRQn, 0, 1);

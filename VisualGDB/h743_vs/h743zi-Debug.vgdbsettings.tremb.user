@@ -14,8 +14,7 @@
     <MemoryWindowPreferences />
     <LiveVariables>
       <LiveVariable>
-        <Expression>SystemCoreClock</Expression>
-        <Type>UInt32</Type>
+        <Expression>henc</Expression>
         <Enabled>true</Enabled>
         <Breakpoint>
           <ComparisonMode>Equals</ComparisonMode>
@@ -26,6 +25,20 @@
         <IsFavorite>false</IsFavorite>
       </LiveVariable>
     </LiveVariables>
+    <NestedLiveVariables>
+      <NestedVariableSettingsCollection>
+        <ID>com.sysprogs.AllGlobals</ID>
+        <Variables />
+      </NestedVariableSettingsCollection>
+      <NestedVariableSettingsCollection>
+        <ID>com.sysprogs.SpecificVariables</ID>
+        <Variables />
+      </NestedVariableSettingsCollection>
+      <NestedVariableSettingsCollection>
+        <ID>com.sysprogs.Custom</ID>
+        <Variables />
+      </NestedVariableSettingsCollection>
+    </NestedLiveVariables>
     <Suggestions>
       <HardwareRegisterFilters />
     </Suggestions>

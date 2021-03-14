@@ -20,7 +20,10 @@
 #include "printf_dbg.h"
 #include "pin_dbg.h"
 #include "pulse_drv.h"
+#include "indic_drv.h"
 #include "cmd_process.h"
+#include "Encoder_drv.h"
+#include "task_qspi_flash.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
 volatile const char __date__[] = __DATE__;
@@ -35,7 +38,9 @@ void system_thread(void *arg)
 { 
 	//Подключение интерфейса отладки
 	DBG_Hardware_Setup();
-	DBG_PIN_Setup();
+	
+	//DBG_PIN_Setup();
+	
 		
 	//Инициализация задачи диагностического терминала 
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
@@ -48,9 +53,17 @@ void system_thread(void *arg)
 	printf("   TIME: %s \r\n", __time__);
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
-  	
+	
+	/* Инициализация задачи QSPI FLASH */
+ 	qFlashInit();	  	
+	
 	/* Configures GPIO / Timer. */
 	Pulse_Init();	
+	
+	Encoder_Init();
+	
+	/* Configures Indic.*/
+    Indic_Init();	
 	
 	for (;;) {
 		vTaskDelay(1000);

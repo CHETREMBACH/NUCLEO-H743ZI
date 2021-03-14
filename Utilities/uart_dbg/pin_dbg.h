@@ -27,33 +27,30 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
-#define T1_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define T1_PIN            GPIO_PIN_3
-#define T1_PORT           GPIOD	
+#define T1_CLK_ENABLE()   __HAL_RCC_GPIOF_CLK_ENABLE()              	
+#define T1_PIN            GPIO_PIN_13
+#define T1_PORT           GPIOF	
 #define T1_HI             T1_PORT->BSRR = T1_PIN
 #define T1_LO             T1_PORT->BSRR = (uint32_t)T1_PIN << (16U);
-#define T1_TG             if ((T1_PORT->ODR & T1_PIN) == T1_PIN) {T1_HI;}else{T1_LO;};
 
-#define T2_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define T2_PIN            GPIO_PIN_4
-#define T2_PORT           GPIOD	
+#define T2_CLK_ENABLE()   __HAL_RCC_GPIOE_CLK_ENABLE()              	
+#define T2_PIN            GPIO_PIN_9
+#define T2_PORT           GPIOE	
 #define T2_HI             T2_PORT->BSRR = T2_PIN
 #define T2_LO             T2_PORT->BSRR = (uint32_t)T2_PIN << (16U);
-#define T2_TG             if ((T2_PORT->ODR & T2_PIN) == T2_PIN) {T2_HI;}else{T2_LO;};	
 
-#define T3_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define T3_PIN            GPIO_PIN_5
-#define T3_PORT           GPIOD	
+#define T3_CLK_ENABLE()   __HAL_RCC_GPIOE_CLK_ENABLE()              	
+#define T3_PIN            GPIO_PIN_11
+#define T3_PORT           GPIOE	
 #define T3_HI             T3_PORT->BSRR = T3_PIN
 #define T3_LO             T3_PORT->BSRR = (uint32_t)T3_PIN << (16U);
-#define T3_TG             if ((T3_PORT->ODR & T3_PIN) == T3_PIN) {T3_HI;}else{T3_LO;};
 	
-#define T4_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define T4_PIN            GPIO_PIN_6
-#define T4_PORT           GPIOD	
+#define T4_CLK_ENABLE()   __HAL_RCC_GPIOF_CLK_ENABLE()              	
+#define T4_PIN            GPIO_PIN_14
+#define T4_PORT           GPIOF	
 #define T4_HI             T4_PORT->BSRR = T4_PIN
 #define T4_LO             T4_PORT->BSRR = (uint32_t)T4_PIN << (16U);
-#define T4_TG             if ((T4_PORT->ODR & T4_PIN) == T4_PIN) {T4_HI;}else{T4_LO;};	
+
 	
 	
 /**

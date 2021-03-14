@@ -77,6 +77,7 @@ void SystemClock_Config(void)
 	{
 		Error_Handler();
 	}
+	
 	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_USB;
 	PeriphClkInitStruct.PLL3.PLL3M = 1;
 	PeriphClkInitStruct.PLL3.PLL3N = 48;
@@ -93,6 +94,30 @@ void SystemClock_Config(void)
 	{
 		Error_Handler();
 	}
+	
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+	PeriphClkInitStruct.PLL2.PLL2M = 1;
+	PeriphClkInitStruct.PLL2.PLL2N = 30;
+	PeriphClkInitStruct.PLL2.PLL2P = 2;
+	PeriphClkInitStruct.PLL2.PLL2Q = 2;
+	PeriphClkInitStruct.PLL2.PLL2R = 2;
+	PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_3;
+	PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
+	PeriphClkInitStruct.PLL2.PLL2FRACN = 0;
+	PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_PLL2;
+	PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_D2PCLK2;
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}		
+	
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_QSPI;
+	PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_PLL;
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}		
+	
 }
 
 /**

@@ -91,6 +91,12 @@
     <Filter Include="Utilites\pulse_drv">
       <UniqueIdentifier>{f2a74609-d20c-4f5b-ad57-563eaf4e7075}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilites\encoder_drv">
+      <UniqueIdentifier>{ab924a3c-1160-4a4a-8418-9060761d642b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilites\quadspi">
+      <UniqueIdentifier>{25464811-34ad-465e-bc3c-9c389ce92da0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="h743zi-Debug.vgdbsettings">
@@ -212,9 +218,6 @@
     <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_comp.h">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_conf_template.h">
-      <Filter>Libraries\STM32F4xx_HAL_Driver\Inc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_cortex.h">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Inc</Filter>
     </ClInclude>
@@ -295,6 +298,39 @@
     </ClInclude>
     <ClInclude Include="..\..\Utilities\uart_dbg\pin_dbg.h">
       <Filter>Utilites\uart_dbg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\encoder_drv\encoder_drv.h">
+      <Filter>Utilites\encoder_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\indic_drv\cfg_led_7seg.h">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\indic_drv\hw_cnf.h">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\indic_drv\hw_led_7seg.h">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\indic_drv\led_7seg.h">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\cmd_qspi_flash.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\drv_qspi_w25q128.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\task_qspi_flash.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\test_qspi_flash.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\quadspi\w25q128fv.h">
+      <Filter>Utilites\quadspi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_conf.h">
+      <Filter>Libraries\STM32F4xx_HAL_Driver\Inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -699,6 +735,30 @@
     </ClCompile>
     <ClCompile Include="..\..\Utilities\uart_dbg\pin_dbg.c">
       <Filter>Utilites\uart_dbg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\encoder_drv\encoder_drv.c">
+      <Filter>Utilites\encoder_drv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\indic_drv\hw_cnf.c">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\indic_drv\led_7seg.c">
+      <Filter>Utilites\indic_drv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\cmd_qspi_flash.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\drv_qspi_w25q128.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\task_qspi_flash.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\test_qspi_flash.c">
+      <Filter>Utilites\quadspi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\quadspi\w25q128fv.c">
+      <Filter>Utilites\quadspi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

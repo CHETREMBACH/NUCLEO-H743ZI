@@ -7,6 +7,7 @@
       <PathStyle>MinGWUnixSlash</PathStyle>
       <LocalDirForAbsolutePaths>$(ToolchainDir)</LocalDirForAbsolutePaths>
     </CustomSourceDirectories>
+    <AutoProgramSPIFFSPartition>true</AutoProgramSPIFFSPartition>
     <MainSourceDirectory>$(ProjectDir)</MainSourceDirectory>
     <ExportAdvancedBuildVariables>false</ExportAdvancedBuildVariables>
     <EmbeddedProfileFile>stm32.xml</EmbeddedProfileFile>
@@ -22,7 +23,6 @@
     <ProjectFile>h743zi.vcxproj</ProjectFile>
     <RemoteBuildEnvironment>
       <Records />
-      <EnvironmentSetupFiles />
     </RemoteBuildEnvironment>
     <ParallelJobCount>1</ParallelJobCount>
     <SuppressDirectoryChangeMessages>true</SuppressDirectoryChangeMessages>
@@ -162,6 +162,7 @@
     <EndOfStackSymbol>_estack</EndOfStackSymbol>
     <TimestampProviderTicksPerSecond>0</TimestampProviderTicksPerSecond>
     <KeepConsoleAfterExit>false</KeepConsoleAfterExit>
+    <UnusedStackFillPattern xsi:nil="true" />
     <CheckInterfaceDrivers>true</CheckInterfaceDrivers>
   </Debug>
 </VisualGDBProjectSettings2>
