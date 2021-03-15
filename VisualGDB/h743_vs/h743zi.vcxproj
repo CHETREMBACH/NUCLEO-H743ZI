@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/indic_drv;../../Utilities/pulse_drv;../../Utilities/encoder_drv;../../Utilities/quadspi;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/indic_drv;../../Utilities/pulse_drv;../../Utilities/encoder_drv;../../Utilities/quadspi;../../Utilities/EEPROM_Emul/Core;../../Utilities/EEPROM_Emul/Porting/W25Q128FV;../../Utilities/CRC;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FREERTOS;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard>C17</CLanguageStandard>
@@ -211,6 +211,9 @@
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_hdl.c" />
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_hlp.c" />
     <ClCompile Include="..\..\Utilities\cmd_trmnl\cmd_process.c" />
+    <ClCompile Include="..\..\Utilities\CRC\CRC16.c" />
+    <ClCompile Include="..\..\Utilities\EEPROM_Emul\Core\eeprom_emul.c" />
+    <ClCompile Include="..\..\Utilities\EEPROM_Emul\Porting\W25Q128FV\flash_interface.c" />
     <ClCompile Include="..\..\Utilities\encoder_drv\encoder_drv.c" />
     <ClCompile Include="..\..\Utilities\indic_drv\hw_cnf.c" />
     <ClCompile Include="..\..\Utilities\indic_drv\indic_drv.c" />
@@ -279,6 +282,11 @@
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_hdl.h" />
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_hlp.h" />
     <ClInclude Include="..\..\Utilities\cmd_trmnl\cmd_process.h" />
+    <ClInclude Include="..\..\Utilities\CRC\CRC16.h" />
+    <ClInclude Include="..\..\Utilities\EEPROM_Emul\Core\eeprom_emul.h" />
+    <ClInclude Include="..\..\Utilities\EEPROM_Emul\Core\eeprom_emul_types.h" />
+    <ClInclude Include="..\..\Utilities\EEPROM_Emul\Porting\W25Q128FV\eeprom_emul_conf.h" />
+    <ClInclude Include="..\..\Utilities\EEPROM_Emul\Porting\W25Q128FV\flash_interface.h" />
     <ClInclude Include="..\..\Utilities\encoder_drv\encoder_drv.h" />
     <ClInclude Include="..\..\Utilities\indic_drv\cfg_led_7seg.h" />
     <ClInclude Include="..\..\Utilities\indic_drv\hw_cnf.h" />

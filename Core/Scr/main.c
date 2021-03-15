@@ -23,7 +23,7 @@
 #include "indic_drv.h"
 #include "cmd_process.h"
 #include "Encoder_drv.h"
-#include "task_qspi_flash.h"
+#include "flash_interface.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
 volatile const char __date__[] = __DATE__;
@@ -41,7 +41,6 @@ void system_thread(void *arg)
 	
 	//DBG_PIN_Setup();
 	
-		
 	//Инициализация задачи диагностического терминала 
 	xTaskCreate(terminal_task, (const char*)"CmdTrmnl", configMINIMAL_STACK_SIZE * 5, NULL, TreadPrioNormal, NULL);
 	
@@ -54,8 +53,7 @@ void system_thread(void *arg)
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
 	
-	/* Инициализация задачи QSPI FLASH */
- 	qFlashInit();	  	
+	Init_Emul_EEPROM();	
 	
 	/* Configures GPIO / Timer. */
 	Pulse_Init();	

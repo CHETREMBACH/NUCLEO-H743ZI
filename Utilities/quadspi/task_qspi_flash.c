@@ -99,8 +99,6 @@ void qFlashTimCallback(TimerHandle_t pxTimer)
   */
 void qFlash_Task(void * pvParameters)
 {  
-	uint8_t id_code[5];
-	
 	/* Открытие очереди для получения команд */
 	if (xCmdQueue == NULL)
 	{

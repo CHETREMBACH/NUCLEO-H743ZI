@@ -44,7 +44,8 @@ _Min_Stack_Size = 0x800; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-DTCMRAMA (xrw)     : ORIGIN = 0x20000000, LENGTH = 64K
+DTCMRAMA0 (xrw)    : ORIGIN = 0x20000000, LENGTH = 48K
+DTCMRAMA1 (xrw)    : ORIGIN = 0x2000C000, LENGTH = 16K
 DTCMRAMB (xrw)     : ORIGIN = 0x20010000, LENGTH = 64K
 RAM_D1   (xrw)     : ORIGIN = 0x24000000, LENGTH = 512K
 RAM_D2A  (xrw)     : ORIGIN = 0x30000000, LENGTH = 256K
@@ -186,7 +187,12 @@ SECTIONS
   .RTOS_HEAP_ITCMRAM (NOLOAD):
   {
       KEEP(*(.RTOS_HEAP_DTCMRAMA))
-  } > DTCMRAMA
+  } > DTCMRAMA0
+
+  .EEPROM_EMUL_ITCMRAM (NOLOAD):
+  {
+      KEEP(*(.EEPROM_EMUL_ITCMRAM))
+  } > DTCMRAMA1
 }
 
 

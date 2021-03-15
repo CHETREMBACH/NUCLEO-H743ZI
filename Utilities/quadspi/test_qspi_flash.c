@@ -174,7 +174,7 @@ void cmd_chip_status(void)
 			if ((cntic & 0x0007) == 0) 	printf(" ");			
 		}
 		/* Чтение сегмента */	
-		BSP_QSPI_DMARead(dampb, cntic*W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
+		BSP_QSPI_Read(dampb, cntic*W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
 		/* Анализ сегмента */		
 		if (compare_mem_damp(dampa, dampb, W25Q128FV_SECTOR_SIZE))
 		{
@@ -261,7 +261,7 @@ void cmd_read_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start read sector %ld ( blok %ld )\n", cmd_param->number, (cmd_param->number) >> 4);
 	printf("Address mem: 0x%.8lX - 0x%.8lX\n", (cmd_param->number)*W25Q128FV_SECTOR_SIZE, (cmd_param->number + 1)*W25Q128FV_SECTOR_SIZE - 1);
-	BSP_QSPI_DMARead(dampb, (cmd_param->number)*W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
+	BSP_QSPI_Read(dampb, (cmd_param->number)*W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
 	//BSP_QSPI_DMARead(dampb, cmd_param->address & 0xFFFFF000, W25Q128FV_SECTOR_SIZE);
 	printf("\n Read sector completed.\n");	
 }
@@ -276,7 +276,7 @@ void cmd_compare_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n Start compare sector %ld ( blok %ld )\n", cmd_param->number, (cmd_param->number) >> 4);
 	printf("Address mem: 0x%.8lX - 0x%.8lX\n", (cmd_param->number)*W25Q128FV_SECTOR_SIZE, (cmd_param->number + 1)*W25Q128FV_SECTOR_SIZE - 1);	
-	BSP_QSPI_DMARead(dampb, (cmd_param->number)*W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
+	BSP_QSPI_Read(dampb, (cmd_param->number)*W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
 	if (compare_mem_damp(dampa, dampb, W25Q128FV_SECTOR_SIZE))
 	{
 		printf("\n Compare sector completed - sector matches the dump.\n");				
@@ -296,7 +296,7 @@ void cmd_view_sector(cmd_sector_qflash_t* cmd_param)
 {
 	printf("\n View sector %ld ( blok %ld )\n", cmd_param->number, (cmd_param->number) >> 4);
 	printf("Address mem: 0x%.8lX - 0x%.8lX\n", (cmd_param->number)*W25Q128FV_SECTOR_SIZE, (cmd_param->number + 1)*W25Q128FV_SECTOR_SIZE - 1);	
-	BSP_QSPI_DMARead(dampb, cmd_param->number * W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
+	BSP_QSPI_Read(dampb, cmd_param->number * W25Q128FV_SECTOR_SIZE, W25Q128FV_SECTOR_SIZE);
 	BlocDampPrint(dampb, W25Q128FV_SECTOR_SIZE, cmd_param->number * W25Q128FV_SECTOR_SIZE);	
 }
 
