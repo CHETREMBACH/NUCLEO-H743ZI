@@ -41,16 +41,16 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../Config;../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/indic_drv;../../Utilities/pulse_drv;../../Utilities/encoder_drv;../../Utilities/quadspi;../../Utilities/EEPROM_Emul/Core;../../Utilities/EEPROM_Emul/Porting/W25Q128FV;../../Utilities/CRC;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/indic_drv;../../Utilities/pulse_drv;../../Utilities/encoder_drv;../../Utilities/quadspi;../../Utilities/EEPROM_Emul/Core;../../Utilities/EEPROM_Emul/Porting/W25Q128FV;../../Config;../../Utilities/CRC;../../Utilities/fsm_control;../../Utilities/key_drv;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>flash_layout;HSE_VALUE=8000000;STM32H743xx;USE_FREERTOS;USE_FULL_ASSERT;DEBUG=1;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard>C17</CLanguageStandard>
       <CPPLanguageStandard>CPP1Z</CPPLanguageStandard>
     </ClCompile>
     <Link>
-      <LibrarySearchDirectories>%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <AdditionalOptions />
       <LinkerScript>../../Config/STM32H743ZI_flash_dram.lds</LinkerScript>
       <GenerateMapFile>false</GenerateMapFile>
@@ -215,9 +215,10 @@
     <ClCompile Include="..\..\Utilities\EEPROM_Emul\Core\eeprom_emul.c" />
     <ClCompile Include="..\..\Utilities\EEPROM_Emul\Porting\W25Q128FV\flash_interface.c" />
     <ClCompile Include="..\..\Utilities\encoder_drv\encoder_drv.c" />
+    <ClCompile Include="..\..\Utilities\fsm_control\fsm_control.c" />
     <ClCompile Include="..\..\Utilities\indic_drv\hw_cnf.c" />
-    <ClCompile Include="..\..\Utilities\indic_drv\indic_drv.c" />
     <ClCompile Include="..\..\Utilities\indic_drv\led_7seg.c" />
+    <ClCompile Include="..\..\Utilities\key_drv\key_drv.c" />
     <ClCompile Include="..\..\Utilities\pulse_drv\pulse_drv.c" />
     <ClCompile Include="..\..\Utilities\quadspi\cmd_qspi_flash.c" />
     <ClCompile Include="..\..\Utilities\quadspi\drv_qspi_w25q128.c" />
@@ -288,11 +289,12 @@
     <ClInclude Include="..\..\Utilities\EEPROM_Emul\Porting\W25Q128FV\eeprom_emul_conf.h" />
     <ClInclude Include="..\..\Utilities\EEPROM_Emul\Porting\W25Q128FV\flash_interface.h" />
     <ClInclude Include="..\..\Utilities\encoder_drv\encoder_drv.h" />
+    <ClInclude Include="..\..\Utilities\fsm_control\fsm_control.h" />
     <ClInclude Include="..\..\Utilities\indic_drv\cfg_led_7seg.h" />
     <ClInclude Include="..\..\Utilities\indic_drv\hw_cnf.h" />
     <ClInclude Include="..\..\Utilities\indic_drv\hw_led_7seg.h" />
-    <ClInclude Include="..\..\Utilities\indic_drv\indic_drv.h" />
     <ClInclude Include="..\..\Utilities\indic_drv\led_7seg.h" />
+    <ClInclude Include="..\..\Utilities\key_drv\key_drv.h" />
     <ClInclude Include="..\..\Utilities\pulse_drv\pulse_drv.h" />
     <ClInclude Include="..\..\Utilities\quadspi\cmd_qspi_flash.h" />
     <ClInclude Include="..\..\Utilities\quadspi\drv_qspi_w25q128.h" />

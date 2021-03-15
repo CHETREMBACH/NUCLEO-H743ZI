@@ -107,7 +107,11 @@ EE_Status FI_CheckBankConfig(void);
 void FI_CacheFlush(void);
 void ConfigureCrc(void);
 uint16_t CalculateCrc(EE_DATA_TYPE Data, uint16_t VirtAddress);
-EE_Status Init_Emul_EEPROM(void);	 
+
+	 
+uint8_t Init_Emul_EEPROM(void);	 
+uint32_t LoadEmuleEEPROM(uint16_t VirtAddress);
+void StoreEmuleEEPROM(uint16_t VirtAddress, uint32_t StoreData);
 	 
 uint32_t get_previous_page(uint32_t page);
 uint32_t get_following_page(uint32_t page);	 

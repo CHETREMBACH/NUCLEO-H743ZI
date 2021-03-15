@@ -20,9 +20,8 @@
 #include "printf_dbg.h"
 #include "pin_dbg.h"
 #include "pulse_drv.h"
-#include "indic_drv.h"
+#include "fsm_control.h"
 #include "cmd_process.h"
-#include "Encoder_drv.h"
 #include "flash_interface.h"
 
 volatile const char __version__[] = "NUCLEO-H743ZI";    
@@ -52,16 +51,11 @@ void system_thread(void *arg)
 	printf("   TIME: %s \r\n", __time__);
 	printf("   CPU FREQ = %.9lu Hz \r\n", SystemCoreClock);  
 	printf("______________________________________________\r\n"); 
-	
-	Init_Emul_EEPROM();	
-	
-	/* Configures GPIO / Timer. */
+
+	/* Инициализация и запуск задачи основного автомата состояний.*/
+	InitFsmTask();		
+	/* Configures GPIO - Timer. */
 	Pulse_Init();	
-	
-	Encoder_Init();
-	
-	/* Configures Indic.*/
-    Indic_Init();	
 	
 	for (;;) {
 		vTaskDelay(1000);

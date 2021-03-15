@@ -218,49 +218,47 @@ uint16_t CalculateCrc(EE_DATA_TYPE Data, uint16_t VirtAddress)
 	return ChecksumCRC(mas, sizeof(mas), &crc16_table);
 }
 
+
+/**
+  * @brief  Read 32bits variable value.
+  * @param  uint16_t VirtAddress
+  * @retval uint32_t - 32bits read variable value
+  */
+uint32_t LoadEmuleEEPROM(uint16_t VirtAddress) 
+{
+	uint32_t TempVar; 
+	EE_ReadVariable32bits(VirtAddress, &TempVar);
+	return TempVar;
+}
+
+/**
+  * @brief  Store 32bits variable value.
+  * @param  uint16_t VirtAddress
+  * @param  uint32_t StoreData - 32bits read variable value
+  * @retval none
+  */
+void StoreEmuleEEPROM(uint16_t VirtAddress, uint32_t StoreData) 
+{
+	EE_ReadVariable32bits(VirtAddress, &StoreData);
+}
+
+
 /**
   * @brief  This function init emul_eeprom.
   * @param  None
-  * @retval EE_Status
-  *           - EE_OK: on success
-  *           - EE error code: if an error occurs
+  * @retval uin8_t 0 - EE_OK: on success
+  *                !0 - EE error code: if an error occurs
   */
-EE_Status Init_Emul_EEPROM(void)
+uint8_t Init_Emul_EEPROM(void)
 {
 	EE_Status ee_status = EE_OK;
-	uint8_t id_code[3];
-	uint32_t temp;
 	
-	uint32_t temp1;	
-	uint32_t temp2;	
-	uint32_t temp3;	
-	uint32_t temp4;		
-	
-	
-	//	/* Инициализация QSPI FLASH */
-	//	printf("\n Start Init W25Q128FV QSPI Drive... \n\n");	
-	//	
-	//	/*Initialize the QSPI in memory mapped mode*/
-	//	BSP_QSPI_Init();
-	//	BSP_QSPI_ConfigFlash(W25Q128FV_QPI_MODE);
-	//	BSP_QSPI_ReadID(id_code);
-	//	
-	//	if ((id_code[0] == 0xEF) && (id_code[1] == 0x40) && (id_code[2] == 0x18))
-	//	{
-	//		printf(" Init Drive Complite. \n\n");
-	//	}
-	//	else
-	//	{
-	//		printf(" Error Init Drive. \n\n");		
-	//	}	
-		
 	/* инициализация QSPI FLASH */
 	qFlashInit();
 	
 	/*Init RAM Emul EEPROM */
 	read_flash_to_ram_emmul_eeprom();
-	
-	
+
 	/*Init core soft Emul EEPROM */
 	ee_status = EE_Init(EE_FORCED_ERASE);
 	if (ee_status != EE_OK) {
@@ -269,28 +267,9 @@ EE_Status Init_Emul_EEPROM(void)
 	else
 	{
 		printf(" Eeprom init OK! \n");
-		
-		for (uint32_t cntiki = 0; cntiki < 100; cntiki++)
-		{
-			ee_status = EE_WriteVariable32bits(0x5501, 0xA1234567);
-			//ee_status = EE_WriteVariable32bits(0x5502, 0xA1222567);
-			ee_status = EE_WriteVariable32bits(0x5503, 0xA1233567);
-			ee_status = EE_WriteVariable32bits(0x5504, 0xA1244567);				
-		
-			EE_ReadVariable32bits(0x5501, &temp1);
-			EE_ReadVariable32bits(0x5503, &temp3);
-			EE_ReadVariable32bits(0x5504, &temp4);					
-		}
-
-		EE_ReadVariable32bits(0x5502, &temp2);	
-				
-		printf("%lX  ", temp1);
-		printf("%lX  ", temp2);
-		printf("%lX  ", temp3);	
-		printf("%lX\n", temp4);			
 	}
 
-	return ee_status;
+	return 0;
 }
 
 /**

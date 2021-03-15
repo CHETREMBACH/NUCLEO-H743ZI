@@ -23,15 +23,13 @@ TIM_OC_InitTypeDef sConfig;
 /* Timer Break Configuration Structure declaration */
 TIM_BreakDeadTimeConfigTypeDef sBreakConfig;
 
-
-
 int32_t time_offset = 0;
 uint32_t start_time = 400;	
 uint32_t time_pulse	= 750;
 uint32_t time_period = 2250;
 int32_t offset_control = 0;
 
-int32_t En_GetData(void);
+extern int32_t GetDeltaTime(void);
 
 /**
   * @brief  This function handles TIM interrupt request.
@@ -40,20 +38,11 @@ int32_t En_GetData(void);
   */
 void TIM2_IRQHandler(void)
 {   
-	int32_t temp_data = En_GetData();
+	int32_t temp_data = GetDeltaTime();
 	/* TIM Update event */
 	if (__HAL_TIM_GET_IT_SOURCE(&TimHandle, TIM_IT_UPDATE) != RESET)
 	{
 		__HAL_TIM_CLEAR_IT(&TimHandle, TIM_IT_UPDATE);
-		
-		if (offset_control > 100)
-		{
-			offset_control = -100;
-		}
-		else 
-		{
-			offset_control++;
-		}
 		
 		TIM2->CCR3 = (((start_time + time_pulse) * 200) - 1) + temp_data;
 		TIM2->CCR4 = (((start_time + time_pulse + time_pulse) * 200)) - 1 + temp_data;

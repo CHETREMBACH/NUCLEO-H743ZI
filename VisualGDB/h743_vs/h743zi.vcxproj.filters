@@ -112,6 +112,12 @@
     <Filter Include="Utilites\CRC">
       <UniqueIdentifier>{63c280af-a00b-44a4-91a5-535fcf112969}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilites\key_drv">
+      <UniqueIdentifier>{7f2cb601-82ab-458e-b25a-758fc2d832be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilites\fsm_control">
+      <UniqueIdentifier>{e9385ca7-ecc8-4047-912c-703a9c7046ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="h743zi-Debug.vgdbsettings">
@@ -305,9 +311,6 @@
     <ClInclude Include="..\..\Core\Inc\stm32h7xx_it.h">
       <Filter>Core\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Utilities\indic_drv\indic_drv.h">
-      <Filter>Utilites\indic_drv</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Utilities\pulse_drv\pulse_drv.h">
       <Filter>Utilites\pulse_drv</Filter>
     </ClInclude>
@@ -361,6 +364,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Utilities\CRC\CRC16.h">
       <Filter>Utilites\CRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\key_drv\key_drv.h">
+      <Filter>Utilites\key_drv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Utilities\fsm_control\fsm_control.h">
+      <Filter>Utilites\fsm_control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -757,9 +766,6 @@
     <ClCompile Include="..\..\Core\Scr\system_stm32h7xx.c">
       <Filter>Core\Scr</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Utilities\indic_drv\indic_drv.c">
-      <Filter>Utilites\indic_drv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Utilities\pulse_drv\pulse_drv.c">
       <Filter>Utilites\pulse_drv</Filter>
     </ClCompile>
@@ -798,6 +804,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Utilities\CRC\CRC16.c">
       <Filter>Utilites\CRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\key_drv\key_drv.c">
+      <Filter>Utilites\key_drv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Utilities\fsm_control\fsm_control.c">
+      <Filter>Utilites\fsm_control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

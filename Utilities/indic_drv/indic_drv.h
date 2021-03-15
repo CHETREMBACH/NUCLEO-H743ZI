@@ -19,12 +19,6 @@
   /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/**
-  * @brief  Configures Indic.
-  * @param  None 
-  * @retval None
-  */
-void Indic_Init(void);
 
 #endif /* __INDIC_DRV_H */
 /************************ (C) COPYRIGHT ONE TO ONE *****END OF FILE****/

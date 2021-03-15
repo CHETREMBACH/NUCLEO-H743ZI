@@ -116,12 +116,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   */
 void Encoder_Init(void)
 {
-		
 	GPIO_InitTypeDef   GPIO_InitStructure;
 
 	/*  PC11  CKL */
 	/*  PC10  DI  */
-	/*  PC9  SW  */
 	
 	/* Enable GPIO clock */
 	__HAL_RCC_GPIOC_CLK_ENABLE();
@@ -140,11 +138,6 @@ void Encoder_Init(void)
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
 	GPIO_InitStructure.Pin = GPIO_PIN_10;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-	
-	GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	GPIO_InitStructure.Pin = GPIO_PIN_9;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);	
 	
 	/* Save parameters */
 	henc.GPIO_A = GPIOC;
