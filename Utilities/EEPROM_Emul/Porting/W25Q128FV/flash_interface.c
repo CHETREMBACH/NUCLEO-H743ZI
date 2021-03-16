@@ -239,7 +239,7 @@ uint32_t LoadEmuleEEPROM(uint16_t VirtAddress)
   */
 void StoreEmuleEEPROM(uint16_t VirtAddress, uint32_t StoreData) 
 {
-	EE_ReadVariable32bits(VirtAddress, &StoreData);
+	EE_WriteVariable32bits(VirtAddress, StoreData);
 }
 
 

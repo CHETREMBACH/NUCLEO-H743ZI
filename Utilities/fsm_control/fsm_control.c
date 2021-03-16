@@ -43,6 +43,14 @@ static param_cntrl_t  state_store;
 
 uint16_t Flag_mode = 0;
 
+
+
+uint8_t GetStateModePWM(void)
+{
+	if (state_work.mode_state > 0) return 1;
+	else return 0; 
+}
+
 /**
   * @brief  Задача основного автомата состояний.
   * @param  pvParameters not used
@@ -79,6 +87,7 @@ void FsmTask(void * pvParameters)
 			{
 				if (state_new.mode_state > 0) 	state_new.mode_state = 0;
 				else  state_new.mode_state = 1;
+				state_work.mode_state   = state_new.mode_state;
 			}
 			
 			/* Проверка на сохранение параметров в EEPROM */

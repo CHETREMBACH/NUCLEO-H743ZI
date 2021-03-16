@@ -30,6 +30,7 @@ uint32_t time_period = 2250;
 int32_t offset_control = 0;
 
 extern int32_t GetDeltaTime(void);
+extern uint8_t GetStateModePWM(void);
 
 /**
   * @brief  This function handles TIM interrupt request.
@@ -43,9 +44,23 @@ void TIM2_IRQHandler(void)
 	if (__HAL_TIM_GET_IT_SOURCE(&TimHandle, TIM_IT_UPDATE) != RESET)
 	{
 		__HAL_TIM_CLEAR_IT(&TimHandle, TIM_IT_UPDATE);
-		
-		TIM2->CCR3 = (((start_time + time_pulse) * 200) - 1) + temp_data;
-		TIM2->CCR4 = (((start_time + time_pulse + time_pulse) * 200)) - 1 + temp_data;
+
+			if (GetStateModePWM() > 0)
+			{
+				TIM2->CCR1 = (start_time * 200) - 1;
+				TIM2->CCR2 = ((start_time + time_pulse) * 200) - 1;
+				TIM2->CCR3 = (((start_time + time_pulse) * 200) - 1) + temp_data;
+				TIM2->CCR4 = (((start_time + time_pulse + time_pulse) * 200)) - 1 + temp_data;
+				GPIOG->BSRR = GPIO_PIN_0;
+			}
+			else
+			{	
+				TIM2->CCR1 = (time_period * 200) - 1;
+				TIM2->CCR2 = (time_period * 200) - 1;
+				TIM2->CCR3 = (time_period * 200) - 1;
+				TIM2->CCR4 = (time_period * 200) - 1;
+				GPIOG->BSRR = (uint32_t)GPIO_PIN_0 << (16U);				
+			}
 	}
 }
 
@@ -96,6 +111,15 @@ void Pulse_Init(void)
 	/* Enable the TIMx global Interrupt */
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);	
 	
+	
+	__HAL_RCC_GPIOG_CLK_ENABLE();
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	GPIO_InitStruct.Pin = GPIO_PIN_0;
+	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	
+    GPIOG->BSRR = GPIO_PIN_0;
 
 	/*##-1- Configure the TIM peripheral #######################################*/
 	/* TIM1 Configuration: generate 4 PWM signals with 4 different duty cycles. */
@@ -126,7 +150,7 @@ void Pulse_Init(void)
 
 	/* Set the pulse value for channel 1 */	
 	sConfig.OCMode       = TIM_OCMODE_COMBINED_PWM2;
-	sConfig.Pulse = (start_time * 200) - 1;
+	sConfig.Pulse = (time_period * 200) - 1; //(start_time * 200) - 1;
 	if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1) != HAL_OK)
 	{
 		/* Configuration Error */
@@ -135,7 +159,7 @@ void Pulse_Init(void)
 
 	/* Set the pulse value for channel 2 */
 	sConfig.OCMode       = TIM_OCMODE_ASSYMETRIC_PWM1;
-	sConfig.Pulse = ((start_time + time_pulse) * 200) - 1;
+	sConfig.Pulse = (time_period * 200) - 1; //((start_time + time_pulse) * 200) - 1;
 	if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_2) != HAL_OK)
 	{
 		/* Configuration Error */
@@ -144,7 +168,7 @@ void Pulse_Init(void)
 
 	/* Set the pulse value for channel 3 */
 	sConfig.OCMode       = TIM_OCMODE_COMBINED_PWM2;
-	sConfig.Pulse = ((start_time + time_pulse) * 200) - 1;
+	sConfig.Pulse = (time_period * 200) - 1; //((start_time + time_pulse) * 200) - 1;
 	if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_3) != HAL_OK)
 	{
 		/* Configuration Error */
@@ -153,7 +177,7 @@ void Pulse_Init(void)
 
 	/* Set the pulse value for channel 4 */
 	sConfig.OCMode       = TIM_OCMODE_ASSYMETRIC_PWM1;
-	sConfig.Pulse = ((start_time + time_pulse + time_pulse) * 200) - 1;
+	sConfig.Pulse = (time_period * 200) - 1;//((start_time + time_pulse + time_pulse) * 200) - 1;
 	if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_4) != HAL_OK)
 	{
 		/* Configuration Error */
@@ -168,7 +192,7 @@ void Pulse_Init(void)
 		Error_Handler();
 	}
 	/* Start channel 2 */
-	if (HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_2) != HAL_OK)
+	if (HAL_TIM_PWM_Stop(&TimHandle, TIM_CHANNEL_2) != HAL_OK)
 	{
 		/* PWM Generation Error */
 		Error_Handler();
@@ -180,7 +204,7 @@ void Pulse_Init(void)
 		Error_Handler();
 	}
 	/* Start channel 4 */
-	if (HAL_TIM_PWM_Start(&TimHandle, TIM_CHANNEL_4) != HAL_OK)
+	if (HAL_TIM_PWM_Stop(&TimHandle, TIM_CHANNEL_4) != HAL_OK)
 	{
 		/* PWM generation Error */
 		Error_Handler();
