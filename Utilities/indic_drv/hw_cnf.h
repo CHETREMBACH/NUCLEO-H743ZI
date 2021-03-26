@@ -43,18 +43,6 @@
 #define I4_HI             I4_PORT->BSRR = I4_PIN
 #define I4_LO             I4_PORT->BSRR = (uint32_t)I4_PIN << (16U);
 
-#define I1_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define I1_PIN            GPIO_PIN_3
-#define I1_PORT           GPIOD	
-#define I1_HI             I1_PORT->BSRR = I1_PIN
-#define I1_LO             I1_PORT->BSRR = (uint32_t)I1_PIN << (16U);
-
-#define I2_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define I2_PIN            GPIO_PIN_4
-#define I2_PORT           GPIOD	
-#define I2_HI             I2_PORT->BSRR = I2_PIN
-#define I2_LO             I2_PORT->BSRR = (uint32_t)I2_PIN << (16U);
-
 #define A_CLK_ENABLE()   __HAL_RCC_GPIOE_CLK_ENABLE()              	
 #define A_PIN            GPIO_PIN_5
 #define A_PORT           GPIOE	

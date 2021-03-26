@@ -84,7 +84,7 @@ int main(void)
 {
 	/* MCU Configuration--------------------------------------------------------*/
     /* Enable the CPU Cache */
-	CPU_CACHE_Enable();	
+	//CPU_CACHE_Enable();	
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();	
 	/* Init thread */

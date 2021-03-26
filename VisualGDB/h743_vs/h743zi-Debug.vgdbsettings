@@ -97,7 +97,7 @@
     <DebugMethod>
       <ID>com.sysprogs.arm.openocd</ID>
       <InterfaceID>stlink-v3</InterfaceID>
-      <InterfaceSerialNumber>0670FF3537394E3457210628</InterfaceSerialNumber>
+      <InterfaceSerialNumber>003500363137511033333639</InterfaceSerialNumber>
       <Configuration xsi:type="com.visualgdb.edp.openocd.settings">
         <CommandLine>-f interface/stlink.cfg -c "transport select hla_swd" -f target/stm32h7x.cfg -c init -c "reset init"</CommandLine>
         <ExtraParameters>
@@ -111,8 +111,8 @@
           <string>set remotetimeout 60</string>
           <string>target remote :$$SYS:GDB_PORT$$</string>
           <string>mon halt</string>
-          <string>mon reset init</string>
           <string>load</string>
+          <string>mon reset init</string>
         </StartupCommands>
         <ProgramFLASHUsingExternalTool>false</ProgramFLASHUsingExternalTool>
         <PreferredGDBPort>0</PreferredGDBPort>
