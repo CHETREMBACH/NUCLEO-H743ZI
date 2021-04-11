@@ -10,7 +10,7 @@
   <BspVersion>1.0</BspVersion>
   <McuID>STM32H743ZI</McuID>
   <BSPSubdirectory>BSP</BSPSubdirectory>
-  <MCUDefinitionFile>$(ProjectDir)\..\..\Config\stm32h743xx.xml</MCUDefinitionFile>
+  <MCUDefinitionFile>..\..\..\Config\stm32h750xx.xml</MCUDefinitionFile>
   <MCUProperties>
     <Entries />
   </MCUProperties>
@@ -23,7 +23,7 @@
         <string>ARM_MATH_CM7</string>
         <string>flash_layout</string>
         <string>CORE_CM7</string>
-        <string>STM32H743ZI</string>
+        <string>STM32H750VB</string>
       </PreprocessorMacros>
       <IncludeDirectories>
         <string>.</string>
@@ -212,7 +212,7 @@
     <RAMSize>131072</RAMSize>
     <FLASHBase>134217728</FLASHBase>
     <RAMBase>536870912</RAMBase>
-    <MCUDefinitionFile>../../Config/stm32h743xx.xml</MCUDefinitionFile>
+    <MCUDefinitionFile>..\..\..\Config\stm32h750xx.xml</MCUDefinitionFile>
     <AdditionalSourcesRequiredForTesting>false</AdditionalSourcesRequiredForTesting>
   </InPlaceMCU>
   <MCUMakFile>stm32.mak</MCUMakFile>

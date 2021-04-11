@@ -120,10 +120,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="h743zi-Debug.vgdbsettings">
+    <None Include="h750vb-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <None Include="h743zi-Release.vgdbsettings">
+    <None Include="h750vb-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="stm32.xml">
@@ -156,9 +156,6 @@
       <Filter>Utilites\cmd_trmnl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h">
-      <Filter>Libraries\CMSIS\Device\ST\STM32H7xx\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\stm32h743xx.h">
       <Filter>Libraries\CMSIS\Device\ST\STM32H7xx\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libraries\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h">
@@ -472,9 +469,6 @@
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash_ex.c">
-      <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Libraries\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_gfxmmu.c">
       <Filter>Libraries\STM32F4xx_HAL_Driver\Src</Filter>
     </ClCompile>
@@ -745,9 +739,6 @@
     <ClCompile Include="..\..\Utilities\uart_dbg\uart_dbg.c">
       <Filter>Utilites\uart_dbg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Config\startup_stm32h743xx.c">
-      <Filter>Config</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1\port.c">
       <Filter>Libraries\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</Filter>
     </ClCompile>
@@ -811,10 +802,8 @@
     <ClCompile Include="..\..\Utilities\fsm_control\fsm_control.c">
       <Filter>Utilites\fsm_control</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <LinkerScript Include="..\..\Config\STM32H743ZI_flash_dram.lds">
+    <ClCompile Include="..\..\Config\startup_stm32h750xx.c">
       <Filter>Config</Filter>
-    </LinkerScript>
+    </ClCompile>
   </ItemGroup>
 </Project>

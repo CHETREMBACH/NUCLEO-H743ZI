@@ -685,11 +685,19 @@ void __attribute__ ((weak, naked)) DCMI_IRQHandler()
 	__asm("bkpt 255");
 	__asm("bx lr");
 }
-void __attribute__ ((weak, naked)) RNG_IRQHandler() 
+void __attribute__ ((weak, naked)) CRYP_IRQHandler() 
 {
 	//If you hit the breakpoint below, one of the interrupts was unhandled in your code. 
 	//Define the following function in your code to handle it:
-	//	extern "C" void RNG_IRQHandler();
+	//	extern "C" void CRYP_IRQHandler();
+	__asm("bkpt 255");
+	__asm("bx lr");
+}
+void __attribute__ ((weak, naked)) HASH_RNG_IRQHandler() 
+{
+	//If you hit the breakpoint below, one of the interrupts was unhandled in your code. 
+	//Define the following function in your code to handle it:
+	//	extern "C" void HASH_RNG_IRQHandler();
 	__asm("bkpt 255");
 	__asm("bx lr");
 }
@@ -1290,7 +1298,8 @@ void OTG_HS_EP1_IN_IRQHandler()       __attribute__ ((weak, alias ("Default_Hand
 void OTG_HS_WKUP_IRQHandler()         __attribute__ ((weak, alias ("Default_Handler")));
 void OTG_HS_IRQHandler()              __attribute__ ((weak, alias ("Default_Handler")));
 void DCMI_IRQHandler()                __attribute__ ((weak, alias ("Default_Handler")));
-void RNG_IRQHandler()                 __attribute__ ((weak, alias ("Default_Handler")));
+void CRYP_IRQHandler()                __attribute__ ((weak, alias ("Default_Handler")));
+void HASH_RNG_IRQHandler()            __attribute__ ((weak, alias ("Default_Handler")));
 void FPU_IRQHandler()                 __attribute__ ((weak, alias ("Default_Handler")));
 void UART7_IRQHandler()               __attribute__ ((weak, alias ("Default_Handler")));
 void UART8_IRQHandler()               __attribute__ ((weak, alias ("Default_Handler")));
@@ -1454,8 +1463,8 @@ void * g_pfnVectors[0xa6] __attribute__ ((section (".isr_vector"), used)) =
 	&OTG_HS_WKUP_IRQHandler,
 	&OTG_HS_IRQHandler,
 	&DCMI_IRQHandler,
-	NULL,
-	&RNG_IRQHandler,
+	&CRYP_IRQHandler,
+	&HASH_RNG_IRQHandler,
 	&FPU_IRQHandler,
 	&UART7_IRQHandler,
 	&UART8_IRQHandler,
