@@ -467,29 +467,22 @@ void terminal_data_processing(char ch) {
   }
 }
 
-#if (DBG_UART_ENABLE == 1)
-#include "uart_dbg.h"
-#endif /* (DBG_UART_ENABLE == 1) */
+/**
+  * @brief  Получение  одного символа из буфера UART.
+  * @param  uint8_t data - транслируемый символ
+  * @retval uint8_t  !0 - есть принятые данные
+  *                  0 - принятых данных нет     
+  */
+uint8_t recv_uart(uint8_t *data);
+static uint8_t rcv_dat = 0;
 
 /**
  * @brief  функция полинга терминала команд
  * @param  none
  * @retval none
  */
-void terminal_cntrl(void) {
-#if (DBG_UART_ENABLE == 1)
-  while (index_wr_buf_cmd != index_rd_buf_cmd) {
-    /* Обработка байта */
-    terminal_data_processing(buf_cmd[index_rd_buf_cmd]);
-    /* смещение индекса чтения */
-    index_rd_buf_cmd++;
-    /* Проверка на переполнение  */
-    if (index_rd_buf_cmd >= DBG_UART_MAX_SIZE_CMD_BUFF) {
-      /* Организация циклического буфера */
-      index_rd_buf_cmd = 0;
-    }
-  }
-#endif /* (DBG_UART_ENABLE == 1) */
+void terminal_cntrl(void) {	
+	while (recv_uart(&rcv_dat))  terminal_data_processing(rcv_dat);
 }
 
 /**

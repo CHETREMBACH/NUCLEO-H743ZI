@@ -96,7 +96,7 @@ void En_Process(Encoder_t* data) {
   * @param  None
   * @retval None
   */
-void EXTI15_10_IRQHandler(void)
+void EXTI9_5_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(henc.GPIO_PIN_A);
 }
@@ -118,32 +118,32 @@ void Encoder_Init(void)
 {
 	GPIO_InitTypeDef   GPIO_InitStructure;
 
-	/*  PC11  CKL */
-	/*  PC10  DI  */
+	/*  PE5  CKL */
+	/*  PE4  DI  */
 	
 	/* Enable GPIO clock */
-	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOE_CLK_ENABLE();
 	
 	/* Configure PC.11 pin as input floating */
 	GPIO_InitStructure.Mode = GPIO_MODE_IT_RISING_FALLING;
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	GPIO_InitStructure.Pin = GPIO_PIN_11;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+	GPIO_InitStructure.Pin = GPIO_PIN_5;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
 
 	/* Enable and set EXTI lines */
-	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 5);
-	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 5);
+	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 	
 	GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	GPIO_InitStructure.Pin = GPIO_PIN_10;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+	GPIO_InitStructure.Pin = GPIO_PIN_4;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
 	
 	/* Save parameters */
-	henc.GPIO_A = GPIOC;
-	henc.GPIO_PIN_A = GPIO_PIN_11;
-	henc.GPIO_B = GPIOC;
-	henc.GPIO_PIN_B = GPIO_PIN_10;
+	henc.GPIO_A = GPIOE;
+	henc.GPIO_PIN_A = GPIO_PIN_5;
+	henc.GPIO_B = GPIOE;
+	henc.GPIO_PIN_B = GPIO_PIN_4;
 	
 	/* Set default mode */
 	henc.Mode = En_Mode_Zero;

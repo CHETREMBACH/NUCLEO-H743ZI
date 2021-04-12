@@ -24,7 +24,7 @@
 #include "cmd_process.h"
 #include "flash_interface.h"
 
-volatile const char __version__[] = "NUCLEO-H743ZI";    
+volatile const char __version__[] = "H750VB";    
 volatile const char __date__[] = __DATE__;
 volatile const char __time__[] = __TIME__;
 
@@ -35,8 +35,8 @@ volatile const char __time__[] = __TIME__;
  */
 void system_thread(void *arg)
 { 
-	//Подключение интерфейса отладки
-	DBG_Hardware_Setup();
+	/*Инициализация аппаратной части отладки */
+    hal_debug_uart_init();
 	
 	//DBG_PIN_Setup();
 	

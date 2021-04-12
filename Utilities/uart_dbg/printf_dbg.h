@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file    printf_dbg.h
-  * @version V1.5.0
-  * @date    25-02-2020
+  * @version V1.7.0
+  * @date    12-04-2021
   * @brief   Перенаправление библиотечной C-функции printf.
   *
   ******************************************************************************
@@ -20,20 +20,16 @@
 extern "C" {
 #endif
 
-#if  (DBG_UART_ENABLE == 1)
-#include "uart_dbg.h"
-#endif  /* (DBG_UART_ENABLE == 1) */
-
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "stdio.h"
 
+#include <stdio.h>	
+	
 /**
   * @brief  Инициализация аппаратной части отладки
   * @param  None
   * @retval None
   */
-void DBG_Hardware_Setup(void);
+void hal_debug_uart_init(void);
 
 #ifdef __cplusplus
 }

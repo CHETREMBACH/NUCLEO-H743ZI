@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file    uart_dbg.c
-  * @version V1.6.0
-  * @date    02-08-2020
+  * @version V1.7.0
+  * @date    12-04-2021
   * @brief   Инициализация драйвера для запуска UART в режиме отладки
   *
   ******************************************************************************
@@ -16,8 +16,17 @@
 
 #include "uart_dbg.h"
 
-#if  (DBG_UART_ENABLE == 1)
+#if ( DBG_UART_ENABLE == 1)
 
+#include "stm32h7xx_ll_usart.h"
+#include "stm32h7xx_ll_rcc.h"
+#include "stm32h7xx_ll_gpio.h"
+#include "stm32h7xx_ll_bus.h"
+
+#define DBG_BaudRate     	            921600 //1843200 //115200 // 10800000 //460800 // 230400 //38400 //
+
+/* Размер буфера диагностических сообщений */
+#define DBG_UART_MAX_SIZE_BUFF       (8000) 
 /* Буфер для диагностического сообщения */
 volatile uint8_t buf_dbg[DBG_UART_MAX_SIZE_BUFF];
 /* Индекс записи сообщения */
@@ -25,6 +34,8 @@ uint16_t index_wr_buf_mes = 0;
 /* Индекс чтения сообщения */
 volatile uint16_t index_rd_buf_mes = 0;
 
+/* Размер буфера приема команд */
+#define DBG_UART_MAX_SIZE_CMD_BUFF   (50)
 /* Буфер для приема команды */
 volatile uint8_t buf_cmd[DBG_UART_MAX_SIZE_CMD_BUFF];
 /* Индекс записи команды */
@@ -32,82 +43,137 @@ volatile uint16_t index_wr_buf_cmd = 0;
 /* Индекс чтения команды */
 uint16_t index_rd_buf_cmd = 0;
 
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
 
 /**
-  * @brief  Инициализация аппаратной части отладки по uart.
+  * @brief  Инициализация аппаратной части отладки
   * @param  None
   * @retval None
   */
-void DBG_UART_Setup(void)
+void hal_debug_uart_init(void)
 {
-	GPIO_InitTypeDef  GPIO_InitStruct;
-	
-	/*##-1- Enable peripherals and GPIO Clocks #################################*/
-	/* Enable GPIO TX/RX clock */
-	DBG_UART_TX_GPIO_CLK_ENABLE();
-	DBG_UART_RX_GPIO_CLK_ENABLE();
-	/* Enable USART2 clock */
-	DBG_UART_CLK_ENABLE(); 
-  
-	/*##-2- Configure peripheral GPIO ##########################################*/  
-	/* UART TX GPIO pin configuration  */
-	GPIO_InitStruct.Pin       = DBG_UART_TX_PIN;
-	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull      = GPIO_NOPULL;
-	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
-	GPIO_InitStruct.Alternate = DBG_UART_TX_AF;
-	
-	HAL_GPIO_Init(DBG_UART_TX_GPIO_PORT, &GPIO_InitStruct);
-    
-	/* UART RX GPIO pin configuration  */
-	GPIO_InitStruct.Pin = DBG_UART_RX_PIN;
-	GPIO_InitStruct.Alternate = DBG_UART_RX_AF;
-    
-	HAL_GPIO_Init(DBG_UART_RX_GPIO_PORT, &GPIO_InitStruct);
-    
-	/*##-3- Configure the NVIC for UART ########################################*/
-	/* NVIC for USART1 */
-	HAL_NVIC_SetPriority(DBG_UART_IRQn, 0, 5);
-	HAL_NVIC_EnableIRQ(DBG_UART_IRQn);
+	LL_USART_InitTypeDef USART_InitStruct = { 0 };
+	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-		
-	/*##-1- Configure the UART peripheral ######################################*/
-    /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-    /* UART1 configured as follow:
-    - Word Length = 8 Bits
-    - Stop Bit = One Stop bit
-    - Parity = None
-    - BaudRate = 9600 baud
-    - Hardware flow control disabled (RTS and CTS signals) */
-	UartHandle.Instance          = DBG_UART_PORT;
-  
-	UartHandle.Init.BaudRate     = DBG_BaudRate;
-	UartHandle.Init.WordLength   = UART_WORDLENGTH_8B;
-	UartHandle.Init.StopBits     = UART_STOPBITS_1;
-	UartHandle.Init.Parity       = UART_PARITY_NONE;
-	UartHandle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
-	UartHandle.Init.Mode         = UART_MODE_TX_RX;
-	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-    
-	if (HAL_UART_Init(&UartHandle) != HAL_OK)
-	{
-		Error_Handler();
-	}
+	LL_RCC_SetUSARTClockSource(LL_RCC_USART234578_CLKSOURCE_PCLK1);
+
+	/* Peripheral clock enable */
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART3);
+
+	/* Peripheral clock enable */
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART3);
+
+	LL_AHB4_GRP1_EnableClock(LL_AHB4_GRP1_PERIPH_GPIOD);
+	/**USART3 GPIO Configuration
+	PD8   ------> USART3_TX
+	PD9   ------> USART3_RX
+	*/
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_8 | LL_GPIO_PIN_9;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	/* USART3 interrupt Init */
+	NVIC_SetPriority(USART3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 5, 5));
+	NVIC_EnableIRQ(USART3_IRQn);
+
+	USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
+	USART_InitStruct.BaudRate = 921600;
+	USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
+	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
+	USART_InitStruct.Parity = LL_USART_PARITY_NONE;
+	USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
+	USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+	USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
+	LL_USART_Init(USART3, &USART_InitStruct);
+	LL_USART_SetTXFIFOThreshold(USART3, LL_USART_FIFOTHRESHOLD_1_8);
+	LL_USART_SetRXFIFOThreshold(USART3, LL_USART_FIFOTHRESHOLD_1_8);
+	LL_USART_DisableFIFO(USART3);
+	LL_USART_ConfigAsyncMode(USART3);
+
+
+	LL_USART_Enable(USART3);
 	
-	/* Enable the UART Data Register not empty Interrupt */
-	__HAL_UART_ENABLE_IT(&UartHandle, UART_IT_RXNE);		
+	LL_USART_EnableIT_RXNE(USART3);
+	
 }
 
 /**
-  * @brief  Разрешение прерывания передачика UART.
-  * @param  None
+  * @brief  Получение  одного символа из буфера UART.
+  * @param  uint8_t data - транслируемый символ
+  * @retval uint8_t  !0 - есть принятые данные
+  *                  0 - принятых данных нет     
+  */
+uint8_t recv_uart(uint8_t *data)
+{
+	if (index_wr_buf_cmd != index_rd_buf_cmd) {
+		/* чтение */
+		data[0] = buf_cmd[index_rd_buf_cmd];
+		/* смещение индекса чтения */
+		index_rd_buf_cmd++;
+		/* Проверка на переполнение  */
+		if (index_rd_buf_cmd >= DBG_UART_MAX_SIZE_CMD_BUFF) {
+			/* Организация циклического буфера */
+			index_rd_buf_cmd = 0;
+		}	
+		return 1;
+	}
+	else
+	{
+		/* сброс буфера */
+		data[0] = 0;
+		return 0;
+	}
+}
+
+/**
+  * @brief  Передача одного символа в UART.
+  * @param  uint8_t data - транслируемый символ
   * @retval None
   */
-void uart_irq_txe_en(void)
+void send_uart(uint8_t data)
 {
-	__HAL_UART_ENABLE_IT(&UartHandle, UART_IT_TXE); 
+	if (index_rd_buf_mes == index_wr_buf_mes)
+	{
+		/* Данных в буфере нет - включение передачи */
+        /* Загружаем символ в буфер */    
+		buf_dbg[index_wr_buf_mes] = data; 
+    
+		/* Проверка на переполнение  */
+		if (index_wr_buf_mes < (DBG_UART_MAX_SIZE_BUFF - 1))
+		{
+			/* Увеличение индекса */
+			index_wr_buf_mes++;
+		} 
+		else
+		{
+			/* Организация циклического буфера */  
+			index_wr_buf_mes = 0;    
+		}    
+    
+		/* включаем прерывание по передаче */
+		LL_USART_EnableIT_TXE(USART3); 
+ 
+	}
+	else
+	{
+		/* Есть данные загружаем данные и инкрементируем индекс */
+        /* Загружаем символ в буфер */    
+		buf_dbg[index_wr_buf_mes] = data;  
+		/* Проверка на переполнение  */
+		if (index_wr_buf_mes < (DBG_UART_MAX_SIZE_BUFF - 1))
+		{
+			/* Увеличение индекса */
+			index_wr_buf_mes++;
+		} 
+		else
+		{
+			/* Организация циклического буфера */  
+			index_wr_buf_mes = 0;    
+		}        
+	}
 }
 
 /**
@@ -115,19 +181,13 @@ void uart_irq_txe_en(void)
   * @param  None
   * @retval None
   */
-void DBG_UART_IRQHandler(void)
+void USART3_IRQHandler(void)
 {
-	uint32_t isrflags   = READ_REG(UartHandle.Instance->ISR);
-	uint32_t cr1its     = READ_REG(UartHandle.Instance->CR1);
-	uint32_t cr3its     = READ_REG(UartHandle.Instance->CR3);
-	
-	/* UART in mode Receiver -------------------------------------------------*/
-	if (((isrflags & USART_ISR_RXNE_RXFNE) != 0U)
-	    && (((cr1its & USART_CR1_RXNEIE_RXFNEIE) != 0U)
-	        || ((cr3its & USART_CR3_RXFTIE) != 0U)))
+		
+	if ((LL_USART_IsActiveFlag_RXNE(USART3)) & (LL_USART_IsEnabledIT_RXNE(USART3)))	
 	{
 		/* принимаем данные        */
-		buf_cmd[index_wr_buf_cmd] =  (uint8_t)(UartHandle.Instance->RDR);
+		buf_cmd[index_wr_buf_cmd] =  LL_USART_ReceiveData8(USART3);
 		/* нкремент индекса */ 
 		index_wr_buf_cmd++;
 		/* Проверка на переполнение  */
@@ -138,24 +198,20 @@ void DBG_UART_IRQHandler(void)
 		}		
 	}
 	
-	/* UART TX Fifo Empty occurred ----------------------------------------------*/
-	//if (((isrflags & USART_ISR_TXFE) != 0U) && ((cr1its & USART_CR1_TXFEIE) != 0U))
-  if(((isrflags & USART_ISR_TXE_TXFNF) != 0U)
-      && (((cr1its & USART_CR1_TXEIE_TXFNFIE) != 0U)
-          || ((cr3its & USART_CR3_TXFTIE) != 0U)))
+	if ((LL_USART_IsActiveFlag_TXE(USART3)) & (LL_USART_IsEnabledIT_TXE(USART3)))		
 	{
 		/* TXE flag автоматически очищается когда записываются новые данные в TDR register */
 		if (index_rd_buf_mes == index_wr_buf_mes)
 		{
 			/* Данных в буфере нет - отключение передачи */
 		    /* отключаем прерывание по передаче */
-			__HAL_UART_DISABLE_IT(&UartHandle, UART_IT_TXFNF);     
+			LL_USART_DisableIT_TXE(USART3);     
 		}
 		else
 		{
 			/* Есть данные передаем и инкрементируем индекс */
 		    /* Передача байта сообщения */
-			UartHandle.Instance->TDR = (uint16_t)(buf_dbg[index_rd_buf_mes]);      
+			LL_USART_TransmitData8( USART3, (uint16_t)(buf_dbg[index_rd_buf_mes]));      
 			/* Увеличение индекса */
 			index_rd_buf_mes++;
 			/* Проверка на переполнение  */
@@ -167,6 +223,36 @@ void DBG_UART_IRQHandler(void)
 		} 
 	}
 }
-#endif  /* (DBG_UART_ENABLE == 1) */
+#else
+	
+/**
+  * @brief  Инициализация аппаратной части отладки
+  * @param  None
+  * @retval None
+  */
+void hal_debug_uart_init(void){	}
+	
+/**
+  * @brief  Передача одного символа в UART.
+  * @param  uint8_t data - транслируемый символ
+  * @retval None
+  */
+void send_uart(uint8_t data)
+{
+	data = data;
+}		
 
+/**
+  * @brief  Получение  одного символа из буфера UART.
+  * @param  uint8_t data - транслируемый символ
+  * @retval uint8_t  !0 - есть принятые данные
+  *                  0 - принятых данных нет     
+  */
+uint8_t recv_uart(uint8_t *data)	
+{
+	data[0] = 0;
+	return 0;
+}	
+	
+#endif	
 /******************* (C) COPYRIGHT 2020 OneTiOne  *****END OF FILE****/

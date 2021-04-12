@@ -132,17 +132,18 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >DTCMRAMB 
-    
-  .lwip_sec (NOLOAD) : {
-    . = ABSOLUTE(0x30040000);
-    *(.RxDecripSection) 
-    
-    . = ABSOLUTE(0x30040060);
-    *(.TxDecripSection)
-    
-    . = ABSOLUTE(0x30040200);
-    *(.RxArraySection) 
-  } >RAM_D2B AT> FLASH
+
+ /*.lwip_sec (NOLOAD) : {
+  *  . = ABSOLUTE(0x30040000);
+  *  *(.RxDecripSection) 
+  *  
+  *  . = ABSOLUTE(0x30040060);
+  *  *(.TxDecripSection)
+  *  
+  *  . = ABSOLUTE(0x30040200);
+  *  *(.RxArraySection) 
+  *} >RAM_D2B AT> FLASH
+  */
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

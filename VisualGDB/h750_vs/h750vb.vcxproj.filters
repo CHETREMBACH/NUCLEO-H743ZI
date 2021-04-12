@@ -806,4 +806,9 @@
       <Filter>Config</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <LinkerScript Include="..\..\Config\STM32H750VB_flash.lds">
+      <Filter>Config</Filter>
+    </LinkerScript>
+  </ItemGroup>
 </Project>

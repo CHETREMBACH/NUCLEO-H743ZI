@@ -21,17 +21,17 @@
 #include "main.h"
 
 /* описание вводов */
-#define KEY_STORE_CLK_ENABLE()       __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define KEY_STORE_PIN                GPIO_PIN_0
-#define KEY_STORE_PORT               GPIOD
+#define KEY_STORE_CLK_ENABLE()       __HAL_RCC_GPIOB_CLK_ENABLE()              	
+#define KEY_STORE_PIN                GPIO_PIN_8
+#define KEY_STORE_PORT               GPIOB
 
-#define KEY_MODE_CLK_ENABLE()         __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define KEY_MODE_PIN                  GPIO_PIN_1
-#define KEY_MODE_PORT                 GPIOD
+#define KEY_MODE_CLK_ENABLE()         __HAL_RCC_GPIOB_CLK_ENABLE()              	
+#define KEY_MODE_PIN                  GPIO_PIN_9
+#define KEY_MODE_PORT                 GPIOB
 
-#define KEY_ENCODE_CLK_ENABLE()       __HAL_RCC_GPIOC_CLK_ENABLE()              	
-#define KEY_ENCODE_PIN                GPIO_PIN_9
-#define KEY_ENCODE_PORT               GPIOC
+#define KEY_ENCODE_CLK_ENABLE()       __HAL_RCC_GPIOE_CLK_ENABLE()              	
+#define KEY_ENCODE_PIN                GPIO_PIN_3
+#define KEY_ENCODE_PORT               GPIOE
 
 /* перечисление состояния кнопки */
 typedef enum 

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
   * @file    printf_dbg.c
-  * @version V1.5.0
-  * @date    25-02-2020
+  * @version V1.7.0
+  * @date    12-04-2021
   * @brief   Перенаправление библиотечной C-функции printf.
   *
   ******************************************************************************
@@ -13,23 +13,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "printf_dbg.h"
 
 /**
-  * @brief  Инициализация аппаратной части отладки
-  * @param  None
+  * @brief  Передача одного символа в UART.
+  * @param  char data - транслируемый символ
   * @retval None
   */
-void DBG_Hardware_Setup(void)
-{
-#if  (DBG_UART_ENABLE == 1)
-	/* Инициализация аппаратной части отладки по uart */
-	DBG_UART_Setup();
-#endif  /* (DBG_UART_ENABLE == 1) */  
-}
-
-/* Разрешение прерывания передачика UART */
-void uart_irq_txe_en(void);
+void send_uart(char data);
 
 /**
  * @brief Перенаправление библиотечной C-функции printf на USART.
@@ -37,47 +27,7 @@ void uart_irq_txe_en(void);
 int _write(int file, char *data, int len)
 {
 	len = len;	
-#if  (DBG_UART_ENABLE == 1)
-	if (index_rd_buf_mes == index_wr_buf_mes)
-	{
-		/* Данных в буфере нет - включение передачи */
-    /* Загружаем символ в буфер */    
-		buf_dbg[index_wr_buf_mes] = data[0]; 
-    
-		/* Проверка на переполнение  */
-		if (index_wr_buf_mes < (DBG_UART_MAX_SIZE_BUFF - 1))
-		{
-			/* Увеличение индекса */
-			index_wr_buf_mes++;
-		} 
-		else
-		{
-			/* Организация циклического буфера */  
-			index_wr_buf_mes = 0;    
-		}    
-    
-		/* включаем прерывание по передаче */
-		uart_irq_txe_en();
- 
-	}
-	else
-	{
-		/* Есть данные загружаем данные и инкрементируем индекс */
-        /* Загружаем символ в буфер */    
-		buf_dbg[index_wr_buf_mes] = data[0];  
-		/* Проверка на переполнение  */
-		if (index_wr_buf_mes < (DBG_UART_MAX_SIZE_BUFF - 1))
-		{
-			/* Увеличение индекса */
-			index_wr_buf_mes++;
-		} 
-		else
-		{
-			/* Организация циклического буфера */  
-			index_wr_buf_mes = 0;    
-		}        
-	}
-#endif  /* (DBG_UART_ENABLE == 1) */ 
+	send_uart(data[0]);
 	return 1;
 }
 /******************* (C) COPYRIGHT 2020 OneTiOne  *****END OF FILE****/

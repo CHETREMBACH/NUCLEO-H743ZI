@@ -51,7 +51,7 @@ void TIM2_IRQHandler(void)
 				TIM2->CCR2 = ((start_time + time_pulse) * 200) - 1;
 				TIM2->CCR3 = (((start_time + time_pulse) * 200) - 1) + temp_data;
 				TIM2->CCR4 = (((start_time + time_pulse + time_pulse) * 200)) - 1 + temp_data;
-				GPIOG->BSRR = GPIO_PIN_0;
+				GPIOG->BSRR = GPIO_PIN_11;
 			}
 			else
 			{	
@@ -59,7 +59,7 @@ void TIM2_IRQHandler(void)
 				TIM2->CCR2 = (time_period * 200) - 1;
 				TIM2->CCR3 = (time_period * 200) - 1;
 				TIM2->CCR4 = (time_period * 200) - 1;
-				GPIOG->BSRR = (uint32_t)GPIO_PIN_0 << (16U);				
+				GPIOG->BSRR = (uint32_t)GPIO_PIN_11 << (16U);				
 			}
 	}
 }
@@ -111,15 +111,15 @@ void Pulse_Init(void)
 	/* Enable the TIMx global Interrupt */
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);	
 	
-	
-	__HAL_RCC_GPIOG_CLK_ENABLE();
+	/* MODE LED */
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.Pin = GPIO_PIN_0;
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+	GPIO_InitStruct.Pin = GPIO_PIN_11;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	
-    GPIOG->BSRR = GPIO_PIN_0;
+    GPIOG->BSRR = GPIO_PIN_11;
 
 	/*##-1- Configure the TIM peripheral #######################################*/
 	/* TIM1 Configuration: generate 4 PWM signals with 4 different duty cycles. */
