@@ -47,7 +47,7 @@
  * Use a Common Cathode display.
  * $WIZ$ type = "boolean"
  */
-//#define CONFIG_LED_7SEG_CCAT       0
+#define CONFIG_LED_7SEG_CCAT       1
 
 /**
  * Number of digit present in the LED display.

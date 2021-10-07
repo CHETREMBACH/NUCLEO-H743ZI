@@ -19,6 +19,26 @@
   /* Includes ------------------------------------------------------------------*/
 #include "main.h"
   
+#define LED_PIN     GPIO_PIN_11
+#define LED_PORT    GPIOA
+#define LED_CLK_EN 	__HAL_RCC_GPIOA_CLK_ENABLE()
+#define LED_ON      LED_PORT->BSRR = LED_PIN
+#define LED_OFF     LED_PORT->BSRR = (uint32_t)LED_PIN << (16U)
+
+#define ENA_PIN     GPIO_PIN_12
+#define ENA_PORT    GPIOB
+#define ENA_CLK_EN 	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define ENA_ON      ENA_PORT->BSRR = ENA_PIN
+#define ENA_OFF     ENA_PORT->BSRR = (uint32_t)ENA_PIN << (16U)
+
+#define ENB_PIN     GPIO_PIN_13
+#define ENB_PORT    GPIOB
+#define ENB_CLK_EN 	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define ENB_ON      ENB_PORT->BSRR = ENB_PIN
+#define ENB_OFF     ENB_PORT->BSRR = (uint32_t)ENB_PIN << (16U)
+
+
+
 /**
   * @brief  Configures GPIO / Timer.
   * @param  None 

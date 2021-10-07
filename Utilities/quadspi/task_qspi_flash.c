@@ -165,7 +165,7 @@ void qFlashInit(void)
 	BSP_QSPI_ConfigFlash(W25Q128FV_QPI_MODE);
 	BSP_QSPI_ReadID(id_code);
 	
-	if ((id_code[0] == 0xEF) && (id_code[1] == 0x40) && (id_code[2] == 0x17))
+	if ((id_code[0] == 0xEF) && (id_code[1] == 0x60) && (id_code[2] == 0x18))
 	{
 		printf(" Init Drive Complite. \n\n");
 	}

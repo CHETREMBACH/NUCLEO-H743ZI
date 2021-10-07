@@ -22,6 +22,7 @@
 #include "encoder_drv.h"
 #include "key_drv.h"
 #include "flash_interface.h"
+#include "printf_dbg.h"
 
 SevenSeg IndicStr;
 TimerHandle_t SoftTimer; /*  Програмный таймер  */
@@ -101,7 +102,9 @@ void FsmTask(void * pvParameters)
 				state_store.mode_state   = state_new.mode_state;	
 				
 				StoreEmuleEEPROM(5234, state_store.stored_param);	
-				state_store.stored_param = LoadEmuleEEPROM(5234); 	
+				state_store.stored_param = LoadEmuleEEPROM(5234); 
+				printf(">> EEPROM = %hd\n", state_store.encode_state);
+			
 			}
 				
 			/* Контроль режима реал тайм */

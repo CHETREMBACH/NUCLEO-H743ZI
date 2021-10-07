@@ -34,16 +34,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <GNUConfigurationType>Debug</GNUConfigurationType>
     <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
-    <ToolchainVersion>9.3.1/9.2.0/r2</ToolchainVersion>
+    <ToolchainVersion>10.3.1/10.2.90/r1</ToolchainVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
-    <ToolchainVersion>9.3.1/9.2.0/r2</ToolchainVersion>
+    <ToolchainVersion>10.3.1/10.2.90/r1</ToolchainVersion>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
       <AdditionalIncludeDirectories>../../Core/Inc;../../Libraries/CMSIS/Core/Include;../../Libraries/CMSIS/Device/ST/STM32H7xx/Include;../../Libraries/FreeRTOS/Source/include;../../Libraries/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1;../../Libraries/STM32H7xx_HAL_Driver/Inc;../../Utilities\cmd_trmnl;../../Utilities\uart_dbg;../../Utilities/indic_drv;../../Utilities/pulse_drv;../../Utilities/encoder_drv;../../Utilities/quadspi;../../Utilities/EEPROM_Emul/Core;../../Utilities/EEPROM_Emul/Porting/W25Q128FV;../../Config;../../Utilities/CRC;../../Utilities/fsm_control;../../Utilities/key_drv;../../Libraries/STM32H7xx_HAL_Driver/Src;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>flash_layout;HSE_VALUE=25000000;STM32H750xx;USE_FREERTOS;DEBUG=1;USE_FULL_LL_DRIVER;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>flash_layout;HSE_VALUE=16000000;STM32H750xx;USE_FREERTOS;DEBUG=1;USE_FULL_LL_DRIVER;DBG_UART_ENABLE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard>C17</CLanguageStandard>
       <CPPLanguageStandard>CPP1Z</CPPLanguageStandard>

@@ -19,14 +19,14 @@
   /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-#define I1_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
-#define I1_PIN            GPIO_PIN_2
-#define I1_PORT           GPIOD	
+#define I1_CLK_ENABLE()   __HAL_RCC_GPIOA_CLK_ENABLE()              	
+#define I1_PIN            GPIO_PIN_15
+#define I1_PORT           GPIOA	
 #define I1_HI             I1_PORT->BSRR = I1_PIN
 #define I1_LO             I1_PORT->BSRR = (uint32_t)I1_PIN << (16U);
 
 #define I2_CLK_ENABLE()   __HAL_RCC_GPIOC_CLK_ENABLE()              	
-#define I2_PIN            GPIO_PIN_11
+#define I2_PIN            GPIO_PIN_10
 #define I2_PORT           GPIOC	
 #define I2_HI             I2_PORT->BSRR = I2_PIN
 #define I2_LO             I2_PORT->BSRR = (uint32_t)I2_PIN << (16U);
@@ -37,9 +37,9 @@
 #define I3_HI             I3_PORT->BSRR = I3_PIN
 #define I3_LO             I3_PORT->BSRR = (uint32_t)I3_PIN << (16U);
 
-#define I4_CLK_ENABLE()   __HAL_RCC_GPIOA_CLK_ENABLE()              	
-#define I4_PIN            GPIO_PIN_15
-#define I4_PORT           GPIOA	
+#define I4_CLK_ENABLE()   __HAL_RCC_GPIOD_CLK_ENABLE()              	
+#define I4_PIN            GPIO_PIN_2
+#define I4_PORT           GPIOD	
 #define I4_HI             I4_PORT->BSRR = I4_PIN
 #define I4_LO             I4_PORT->BSRR = (uint32_t)I4_PIN << (16U);
 
@@ -50,7 +50,7 @@
 #define A_LO             A_PORT->BSRR = (uint32_t)A_PIN << (16U);
 
 #define B_CLK_ENABLE()   __HAL_RCC_GPIOC_CLK_ENABLE()              	
-#define B_PIN            GPIO_PIN_11
+#define B_PIN            GPIO_PIN_12
 #define B_PORT           GPIOC	
 #define B_HI             B_PORT->BSRR = B_PIN
 #define B_LO             B_PORT->BSRR = (uint32_t)B_PIN << (16U);

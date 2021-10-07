@@ -60,62 +60,62 @@ void Hw_Indic_Init(void)
 	I1_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = I1_PIN;
 	HAL_GPIO_Init(I1_PORT, &GPIO_InitStruct);
-	I1_HI;
+	I1_LO;
 	
 	I2_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = I2_PIN;
 	HAL_GPIO_Init(I2_PORT, &GPIO_InitStruct);
-	I2_HI;
+	I2_LO;
 	
 	I3_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = I3_PIN;
 	HAL_GPIO_Init(I3_PORT, &GPIO_InitStruct);
-	I3_HI;
+	I3_LO;
 	
 	I4_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = I4_PIN;
 	HAL_GPIO_Init(I4_PORT, &GPIO_InitStruct);
-	I4_HI;
+	I4_LO;
 	
 	A_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = A_PIN;
 	HAL_GPIO_Init(A_PORT, &GPIO_InitStruct);
-	A_HI;
+	A_LO;
 	
 	B_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = B_PIN;
 	HAL_GPIO_Init(B_PORT, &GPIO_InitStruct);
-	B_HI;	
+	B_LO;	
 	
 	C_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = C_PIN;
 	HAL_GPIO_Init(C_PORT, &GPIO_InitStruct);
-	C_HI;	
+	C_LO;	
 	
 	D_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = D_PIN;
 	HAL_GPIO_Init(D_PORT, &GPIO_InitStruct);
-	D_HI;	
+	D_LO;	
 
 	E_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = E_PIN;
 	HAL_GPIO_Init(E_PORT, &GPIO_InitStruct);
-	E_HI;	
+	E_LO;	
 	
 	F_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = F_PIN;
 	HAL_GPIO_Init(F_PORT, &GPIO_InitStruct);
-	F_HI;	
+	F_LO;	
 	
 	G_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = G_PIN;
 	HAL_GPIO_Init(G_PORT, &GPIO_InitStruct);
-	G_HI;	
+	G_LO;	
 	
 	DP_CLK_ENABLE();
 	GPIO_InitStruct.Pin       = DP_PIN;
 	HAL_GPIO_Init(DP_PORT, &GPIO_InitStruct);
-	DP_HI;	
+	DP_LO;	
 }
 
 
@@ -154,41 +154,29 @@ void sseg_on(uint8_t dgt, uint8_t n_dgt)
 {
 	switch (n_dgt)
 	{		
-# ifdef CONFIG_LED_7SEG_CCAT
-		//Common Cathode	
-		case 0 :
-			I2_LO; I3_LO; I4_LO;
-		I1_HI; 		
+# ifdef  CONFIG_LED_7SEG_CCAT
+	//Common Cathode	
+	case 0 : I2_LO; I3_LO; I4_LO;I1_HI; 		
 		break;
-	case 1 :
-		I1_LO; I3_LO; I4_LO;
-		I2_HI; 	
+	case 1 : I1_LO; I3_LO; I4_LO;I2_HI; 	
 		break;
-	case 2 :
-		I1_LO; I2_LO; I4_LO;
-		I3_HI; 	
+	case 2 : I1_LO; I2_LO; I4_LO;I3_HI; 	
 		break;
-	case 3 :
-		I1_LO; I2_LO; I3_LO;
-		I4_HI; 	
+	case 3 : I1_LO; I2_LO; I3_LO;I4_HI; 	
 		break;
 # else
 		//Common Anode		
 		case 0 :
-			I2_HI; I3_HI; I4_HI;
-		I1_LO; 		
+		I2_HI; I3_HI; I4_HI; I1_LO; 		
 		break;
 	case 1 :
-		I1_HI; I3_HI; I4_HI;
-		I2_LO; 	
+		I1_HI; I3_HI; I4_HI; I2_LO; 	
 		break;
 	case 2 :
-		I1_HI; I2_HI; I4_HI;
-		I3_LO; 	
+		I1_HI; I2_HI; I4_HI; I3_LO; 	
 		break;
 	case 3 :
-		I1_HI; I2_HI; I3_HI;
-		I4_LO; 	
+		I1_HI; I2_HI; I3_HI; I4_LO; 	
 		break;
 			
 # endif
